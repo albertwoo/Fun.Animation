@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
@@ -18,5 +18,8 @@
     <PackageReference Include="Fable.React" Version="5.3.5" />
     <PackageReference Include="Fun.LightForm.Fable" Version="1.0.2" />
     <PackageReference Include="Zanaptak.TypedCssClasses" Version="0.2.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\src\Fun.ReactSpring\Fun.ReactSpring.fsproj" />
   </ItemGroup>
 </Project>

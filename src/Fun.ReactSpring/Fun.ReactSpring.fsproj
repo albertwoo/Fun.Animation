@@ -9,11 +9,22 @@
     <RepositoryUrl>https://github.com/albertwoo/Fun.ReactSpring</RepositoryUrl>
     <PackageTags>Fable, React-Spring</PackageTags>
     <Authors>slaveoftime</Authors>
+    <NpmDependencies>
+      <NpmPackage Name="react-spring" Version="&gt;= 9.0.0-beta.34" />
+    </NpmDependencies>
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="Domain.fs" />
-    <Compile Include="Dsl.fs" />
+    <Compile Include="Hooks.fs" />
+    <Compile Include="Animated.fs" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Fable.Core" Version="3.1.4" />
+    <PackageReference Include="Fable.React" Version="5.3.5" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Content Include="*.fsproj; **\*.fs" PackagePath="fable\" />
+  </ItemGroup>
 </Project>
