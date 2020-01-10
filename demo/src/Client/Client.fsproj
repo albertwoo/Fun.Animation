@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Common.fs" />
+    <Compile Include="AnimeJs.fs" />
+    <Compile Include="App\Domain.fs" />
+    <Compile Include="App\States.fs" />
+    <Compile Include="App\AnimeJsDemo.fs" />
+    <Compile Include="App\Views.fs" />
+    <Compile Include="Startup.fs" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Fable.Core" Version="3.1.4" />
+    <PackageReference Include="Fable.Elmish" Version="3.0.6" />
+    <PackageReference Include="Fable.Elmish.HMR" Version="4.0.1" />
+    <PackageReference Include="Fable.React" Version="5.3.5" />
+    <PackageReference Include="Fun.LightForm.Fable" Version="1.0.2" />
+    <PackageReference Include="Zanaptak.TypedCssClasses" Version="0.2.0" />
+  </ItemGroup>
+</Project>
