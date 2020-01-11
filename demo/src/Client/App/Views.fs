@@ -160,33 +160,35 @@ let trailDemo =
           fun () ->
             {|
               xy = [0.; 0.] |> toJsArray
-              config = fun i -> if i = 0 then box fast else box slow
+              config = fun i ->
+                if i = 0 then box fast else box slow
             |}
         )
 
       div </> [
         Children [
-          //svg [
-          //  Style [
-          //    Position PositionOptions.Absolute
-          //    Width 0
-          //    Height 0
-          //  ]
-          //] [
-          //   svgEl "filter" [
-          //    Id "goo"
-          //  ] [
-          //    svgEl "feGaussianBlur" [
-          //      SVGAttr.Custom("in", "SourceGraphic")
-          //      SVGAttr.Custom("result", "blur")
-          //      SVGAttr.Custom("stdDeviation", "30")
-          //    ] []
-          //    svgEl "feColorMatrix" [
-          //      SVGAttr.Custom("in", "blur")
-          //      SVGAttr.Custom("values", "1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 30 -7")
-          //    ] []
-          //  ]
-          //]
+          svg [
+            Style [
+              Position PositionOptions.Absolute
+              Width 0
+              Height 0
+              Display DisplayOptions.None
+            ]
+          ] [
+             svgEl "filter" [
+              Id "goo"
+            ] [
+              svgEl "feGaussianBlur" [
+                SVGAttr.Custom("in", "SourceGraphic")
+                SVGAttr.Custom("result", "blur")
+                SVGAttr.Custom("stdDeviation", "10")
+              ] []
+              svgEl "feColorMatrix" [
+                SVGAttr.Custom("in", "blur")
+                SVGAttr.Custom("values", "1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 30 -7")
+              ] []
+            ]
+          ]
 
           Animated.div </> [
             Style [
@@ -194,22 +196,25 @@ let trailDemo =
               Width 400
               Position PositionOptions.Absolute
               BackgroundColor "lightgray"
+              Filter "url('#goo')"
+              OverflowStyle OverflowOptions.Hidden
             ]
-            OnMouseMove (fun x -> trail.update {| xy = toJsArray [ x.clientX, x.clientY ] |})
+            OnMouseMove (fun x -> trail.update {| xy = toJsArray [ x.clientX; x.clientY ] |})
             Children (
               trail.current
               |> Seq.mapi (fun i data ->
                 Animated.div </> [
                   Key (string i)
                   Style [
-                    Width 60
-                    Height 60
+                    Width 120
+                    Height 120
                     BorderRadius "50%"
                     BackgroundColor "lightcoral"
                     Position PositionOptions.Absolute
                     WillChange "transform"
                     Opacity 0.5
-                    Transform data?xy?interpolate?(trans)
+                    BoxShadow "10px 10px 5px 0px rgba(0, 0, 0, 0.75)"
+                    Transform (data?xy?interpolate(trans))
                   ]
                 ]
               )
@@ -227,7 +232,7 @@ let app state dispatch =
       Children [
         //AnimeJsDemo.animeDiv()
         //transitionDemo()
-        springDemo()
+        //springDemo()
         //springsDemo()
         trailDemo()
       ]
