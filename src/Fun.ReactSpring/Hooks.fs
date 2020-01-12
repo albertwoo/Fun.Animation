@@ -21,6 +21,10 @@ type ISprings<'T> =
     abstract stop: unit -> unit
 
 
+type IConfig =
+    abstract stiff: obj
+
+
 type ISpringHooks =
     abstract useSpring: 'Option -> obj
 
@@ -39,6 +43,8 @@ type ISpringHooks =
 
     [<Emit("$0.useTransition($1, $2, $3)")>]
     abstract useTransition: 'Item[] * ('Item -> 'Key) * 'Option -> obj []
+
+    abstract useChain: obj[] * obj [] -> unit
 
 
 [<RequireQualifiedAccess>]
@@ -69,5 +75,12 @@ module SpringHooks =
             member _.useTransition (_, _, _) = [||]
             member _.useTrail _ = obj()
             member _.useTrailLazy (_, _) = DummyData.mutipleValues
+            member _.useChain (_, _) = ()
         }
 
+    [<Import("config", "react-spring")>]
+    let SpringConfigs: IConfig =
+        {
+            new IConfig with
+                member _.stiff = obj()
+        }
