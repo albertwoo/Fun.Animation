@@ -22,7 +22,12 @@ type ISprings<'T> =
 
 
 type IConfig =
+    abstract ``default``: obj
+    abstract gentle: obj
+    abstract wobbly: obj
     abstract stiff: obj
+    abstract slow: obj
+    abstract molasses: obj
 
 
 type ISpringHooks =
