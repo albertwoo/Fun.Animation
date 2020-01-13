@@ -29,6 +29,11 @@ type ITrail<'T> =
     [<Emit("$0[2]()")>]
     abstract stop: unit -> unit   
 
+type ITransition<'Item, 'Option> =
+    { item: 'Item
+      props: 'Option
+      key: int }
+
 
 type ISpringHooks =
     abstract useSpring: 'Option -> obj
@@ -46,10 +51,10 @@ type ISpringHooks =
     [<Emit("$0.useTrail($1, $2)")>]
     abstract useTrailLazy: int * (unit -> 'Option) -> ITrail<obj>
 
-    [<Emit("$0.useTransition($1, $2, $3)")>]
-    abstract useTransition: 'Item[] * ('Item -> 'Key) * 'Option -> obj []
-
     abstract useChain: obj[] * obj [] -> unit
+
+    [<Emit("$0.useTransition($1, $2, $3)")>]
+    abstract useTransition: 'Item[] * ('Item -> 'Key) * 'Option -> ITransition<'Item, 'Option> []
 
 
 [<RequireQualifiedAccess>]
@@ -87,10 +92,10 @@ let SpringHooks: ISpringHooks =
             member _.useSpringLazy _ = DummyData.singleValue (obj())
             member _.useSprings _ _ = obj()
             member _.useSpringsLazy (_, _) = DummyData.mutipleValues 
-            member _.useTransition (_, _, _) = [||]
             member _.useTrail _ _ = obj()
             member _.useTrailLazy (_, _) = DummyData.trail
             member _.useChain (_, _) = ()
+            member _.useTransition (_, _, _) = [||]
     }
 
 

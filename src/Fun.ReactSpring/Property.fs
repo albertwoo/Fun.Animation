@@ -10,6 +10,8 @@ type private Key = int
 [<RequireQualifiedAccess>]
 type Property<'T> =
     | From of 'T
+    | Enter of 'T
+    | Leave of 'T
     | To of 'T
     | [<CompiledName("to")>] ToByFn of (Key -> 'T)
     | [<CompiledName("to")>] ToByArray of 'T list
