@@ -15,9 +15,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Compile Include="Utils.fs" />
         <Compile Include="Config.fs" />
         <Compile Include="Property.fs" />
+        <Compile Include="Utils.fs" />
         <Compile Include="Bindings.fs" />
         <Compile Include="Animated.fs" />
         <Compile Include="Dsl.fs" />

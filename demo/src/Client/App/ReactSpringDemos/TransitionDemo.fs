@@ -11,27 +11,30 @@ let render =
       fun () ->
         let source = Hooks.useState 0
         let transitions =
-          SpringHooks.useTransition(
-            [|source.current|],
-            id,
-            [
-                Property.From  {| opacity = 0; transform = "translate3d(100%,0,0)" |}
-                Property.Enter {| opacity = 1; transform = "translate3d(0%,0,0)" |}
-                Property.Leave {| opacity = 0; transform = "translate3d(-50%,0,0)" |}
-            ]
-          )
+            SpringHooks.useTransition(
+                [| source.current |],
+                id,
+                [
+                    Property.From  {| opacity = 0; transform = "translate3d(100%,0,0)" |}
+                    Property.Enter {| opacity = 1; transform = "translate3d(0%,0,0)" |}
+                    Property.Leave {| opacity = 0; transform = "translate3d(-50%,0,0)" |}
+                ]
+            )
 
         div </> [
             OnClick (fun _ -> source.update((source.current + 1) % 3))
-            Classes [ Tw.``w-full``; Tw.``h-screen``; Tw.``bg-blue-100`` ]
+            Classes [ Tw.absolute; Tw.``w-full``; Tw.``h-screen``; Tw.``bg-blue-100``; Tw.``overflow-hidden`` ]
             Children (
                 transitions
                 |> Seq.map (fun data ->
                     Animated.div </> [
                         Key (string data.key)
                         Classes [
-                            Tw.``text-6xl``
+                            Tw.``cursor-pointer``
+                            Tw.absolute
+                            Tw.``w-full``
                             Tw.``h-full``
+                            Tw.``text-6xl``
                             Tw.``text-center``
                             Tw.``text-white``
                             Tw.flex
@@ -45,6 +48,8 @@ let render =
                                 Tw.``bg-purple-400``
                         ]
                         Style [
+                            TextShadow "0px 2px 40px #00000020, 0px 2px 5px #00000030"
+                            WillChange "transform, opacity"
                             Opacity data.props.opacity
                             Transform data.props.transform
                         ]

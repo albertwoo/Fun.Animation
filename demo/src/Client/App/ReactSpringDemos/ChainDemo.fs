@@ -13,8 +13,8 @@ let render =
             let springRef = Hooks.useRef null
             let spring =
                 SpringHooks.useSpring [
+                    Property.Ref springRef
                     Property.Config Configs.Stiff
-                    Property.Custom ("ref", box springRef)
                     Property.From {| size = "20%"; background = "hotpink" |}
                     Property.To 
                         {|
@@ -29,9 +29,9 @@ let render =
                     (if isOpen.current then [|1..12|] else [||]),
                     id,
                     [
-                        Property.Custom ("ref", box transRef)
-                        Property.Custom("unique", box true)
-                        Property.Custom("trail", box (400. / 12.))
+                        Property.Ref transRef
+                        Property.Unique true
+                        Property.Trail (400 / 12)
                         Property.From  {| opacity = 0; transform = "scale(0)" |}
                         Property.Enter {| opacity = 1; transform = "scale(1)" |}
                         Property.Leave {| opacity = 0; transform = "scale(0)" |}
