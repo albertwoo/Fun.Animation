@@ -16,6 +16,7 @@ type Property<'T> =
     | Delay of float
     | DelayByFn of (Key -> float)
     | Config of ConfigProp list
+    | ConfigByFn of (Key -> ConfigProp list)
     | Reset of bool
     | Reverse of bool
     | OnStart of (Key -> unit)
@@ -26,7 +27,8 @@ type Property<'T> =
     static member toObj props =
         props
         |> Seq.map (function
-            | Property.Config x -> Property.Custom ("config", keyValueList CaseRules.LowerFirst x)
+            | Property.Config x     -> Property.Custom ("config", keyValueList CaseRules.LowerFirst x)
+            | Property.ConfigByFn f -> Property.Custom ("config", box(f >> keyValueList CaseRules.LowerFirst))
             | x -> x
         )
         |> keyValueList CaseRules.LowerFirst

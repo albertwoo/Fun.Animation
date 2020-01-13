@@ -16,9 +16,18 @@ type ISprings<'T> =
     [<Emit("$0[0]")>]
     abstract current: 'T []
     [<Emit("$0[1]($1)")>]
-    abstract update: 'T -> unit
+    abstract update: (Key -> 'T) -> unit
     [<Emit("$0[2]()")>]
     abstract stop: unit -> unit
+
+
+type ITrail<'T> =
+    [<Emit("$0[0]")>]
+    abstract current: 'T[]
+    [<Emit("$0[1]($1)")>]
+    abstract update: 'T -> unit
+    [<Emit("$0[2]()")>]
+    abstract stop: unit -> unit   
 
 
 type ISpringHooks =
@@ -27,15 +36,15 @@ type ISpringHooks =
     [<Emit("$0.useSpring($1)")>]
     abstract useSpringLazy: (unit -> 'Option) -> ISpring<obj>
 
-    abstract useSprings: int -> 'option [] -> obj
+    abstract useSprings: int -> 'Option [] -> obj
 
     [<Emit("$0.useSprings($1, $2)")>]
     abstract useSpringsLazy: int * (int -> 'Option) -> ISprings<obj>
 
-    abstract useTrail: 'Option -> obj
+    abstract useTrail: int -> 'Option -> obj
 
     [<Emit("$0.useTrail($1, $2)")>]
-    abstract useTrailLazy: int * (unit -> 'Option) -> ISprings<obj>
+    abstract useTrailLazy: int * (unit -> 'Option) -> ITrail<obj>
 
     [<Emit("$0.useTransition($1, $2, $3)")>]
     abstract useTransition: 'Item[] * ('Item -> 'Key) * 'Option -> obj []
@@ -61,6 +70,14 @@ module DummyData =
                 member _.stop () = ()
         }
 
+    let trail =
+        {
+            new ITrail<obj> with
+                member _.current = [||] |> unbox
+                member _.update _ = ()
+                member _.stop () = ()
+        }
+
 
 [<Import("*", "react-spring")>]
 let SpringHooks: ISpringHooks =
@@ -71,8 +88,8 @@ let SpringHooks: ISpringHooks =
             member _.useSprings _ _ = obj()
             member _.useSpringsLazy (_, _) = DummyData.mutipleValues 
             member _.useTransition (_, _, _) = [||]
-            member _.useTrail _ = obj()
-            member _.useTrailLazy (_, _) = DummyData.mutipleValues
+            member _.useTrail _ _ = obj()
+            member _.useTrailLazy (_, _) = DummyData.trail
             member _.useChain (_, _) = ()
     }
 

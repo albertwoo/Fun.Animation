@@ -55,45 +55,6 @@ open Fable.React.Props
 //      )
 //  )
 
-//let springDemo =
-//  FunctionComponent.Of(
-//    fun () ->
-//      let spring =
-//        SpringHooks.useSpringLazy(fun () ->
-//          {|
-//            xys = [|0.; 0.; 1.|] |> toJsArray
-//            config = {| mass = 5; tension = 350; friction = 40 |}
-//          |}
-//        )
-
-//      let calc x y =
-//        [|
-//          -(y - Browser.Dom.window.innerHeight / 2.) / 20.
-//          (x - Browser.Dom.window.innerWidth / 2.) / 20.
-//          1.1
-//        |]
-//        |> toJsArray
-        
-//      let tran x y s =
-//        sprintf "perspective(600px) rotateX(%ddeg) rotateY(%ddeg) scale(%A)" x y s
-      
-//      Animated.div </> [
-//        Classes [ Tw.``text-center`` ]
-//        Style [
-//          Width 200
-//          Height 200
-//          BackgroundColor "green"
-//          Transform (spring.current?xys?interpolate(tran))
-//        ]
-//        OnMouseMove (fun x ->
-//          spring.update{| xys = calc x.clientX x.clientY |}
-//        )
-//        OnMouseLeave (fun _ ->
-//          spring.update{| xys = toJsArray [0; 0; 1] |}
-//        )
-//        Text "useSpring"
-//      ]
-//  )
 
 
 //let pages = [
@@ -320,4 +281,6 @@ let app state dispatch =
     //springDemo()
     //springsDemo()
     //trailDemo()
-    ReactSpringDemos.springDemo()
+    //ReactSpringDemos.SpringDemo.render()
+    //ReactSpringDemos.SpringsDemo.render()
+    ReactSpringDemos.TrailDemo.render()

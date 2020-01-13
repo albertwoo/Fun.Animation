@@ -1,15 +1,15 @@
-module Client.App.ReactSpringDemos
+module Client.App.ReactSpringDemos.SpringDemo
 
 open Fable.React
 open Fable.React.Props
 open Fun.ReactSpring
 
 
-let springDemo =
+let render =
     FunctionComponent.Of(
         fun () ->
             let spring =
-                SpringHooks.useSpringLazy(fun () -> [
+                SpringHooks.useSpring(fun () -> [
                     Property.To {| xys = [| 0.; 0.; 1. |] |}
                     Property.Config Configs.Slow
                 ])
