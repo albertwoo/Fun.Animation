@@ -8,6 +8,7 @@
     <Compile Include="App\Domain.fs" />
     <Compile Include="App\States.fs" />
     <Compile Include="App\AnimeJsDemo.fs" />
+    <Compile Include="App\ReactSpringDemos\SpringDemo.fs" />
     <Compile Include="App\Views.fs" />
     <Compile Include="Startup.fs" />
   </ItemGroup>

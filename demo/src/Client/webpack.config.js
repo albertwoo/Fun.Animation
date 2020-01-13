@@ -117,7 +117,8 @@ module.exports = {
                 use: {
                     loader: 'fable-loader',
                     options: {
-                        babel: CONFIG.babel
+                        babel: CONFIG.babel,
+                        typedArrays: false
                     }
                 }
             },

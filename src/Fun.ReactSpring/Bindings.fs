@@ -1,6 +1,7 @@
-namespace Fun.ReactSpring
+module Fun.ReactSpring.Bindings
 
 open Fable.Core
+open Fable.Core.JsInterop
 
 
 type ISpring<'T> =
@@ -10,8 +11,7 @@ type ISpring<'T> =
     abstract update: 'T -> unit
     [<Emit("$0[2]()")>]
     abstract stop: unit -> unit
-
-
+    
 type ISprings<'T> =
     [<Emit("$0[0]")>]
     abstract current: 'T []
@@ -19,15 +19,6 @@ type ISprings<'T> =
     abstract update: 'T -> unit
     [<Emit("$0[2]()")>]
     abstract stop: unit -> unit
-
-
-type IConfig =
-    abstract ``default``: obj
-    abstract gentle: obj
-    abstract wobbly: obj
-    abstract stiff: obj
-    abstract slow: obj
-    abstract molasses: obj
 
 
 type ISpringHooks =
@@ -55,24 +46,26 @@ type ISpringHooks =
 [<RequireQualifiedAccess>]
 module DummyData =
     let singleValue<'T> initValue =
-        { new ISpring<'T> with
-            member _.current = initValue
-            member _.update _ = ()
-            member _.stop () = () }
+        {
+            new ISpring<'T> with
+                member _.current = initValue
+                member _.update _ = ()
+                member _.stop () = ()
+        }
 
     let mutipleValues<'T> =
-        { new ISprings<obj> with
-            member _.current = [||] |> unbox
-            member _.update _ = ()
-            member _.stop () = () }
-
-
-[<AutoOpen>]
-module SpringHooks =
-    [<Import("*", "react-spring")>]
-    let SpringHooks: ISpringHooks =
         {
-          new ISpringHooks with
+            new ISprings<obj> with
+                member _.current = [||] |> unbox
+                member _.update _ = ()
+                member _.stop () = ()
+        }
+
+
+[<Import("*", "react-spring")>]
+let SpringHooks: ISpringHooks =
+    {
+        new ISpringHooks with
             member _.useSpring _ = obj()
             member _.useSpringLazy _ = DummyData.singleValue (obj())
             member _.useSprings _ _ = obj()
@@ -81,11 +74,8 @@ module SpringHooks =
             member _.useTrail _ = obj()
             member _.useTrailLazy (_, _) = DummyData.mutipleValues
             member _.useChain (_, _) = ()
-        }
+    }
 
-    [<Import("config", "react-spring")>]
-    let SpringConfigs: IConfig =
-        {
-            new IConfig with
-                member _.stiff = obj()
-        }
+
+let inline interpolate (prop, map) =
+    prop?interpolate(map)
