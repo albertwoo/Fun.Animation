@@ -40,7 +40,7 @@ let render =
 
             SpringHooks.useChain(
                 (if isOpen.current then [|springRef; transRef|] else [|transRef; springRef|]),
-                ([|0.; if isOpen.current then 0.1 else 0.5|])
+                [|0.; if isOpen.current then 0.1 else 0.5|]
             )
 
             div </> [

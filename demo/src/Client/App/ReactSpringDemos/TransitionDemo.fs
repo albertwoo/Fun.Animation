@@ -2,7 +2,6 @@ module Client.App.ReactSpringDemos.TransitionDemo
 
 open Fable.React
 open Fable.React.Props
-open Fable.Core.JsInterop
 open Fun.ReactSpring
 
 
@@ -23,7 +22,7 @@ let render =
 
         div </> [
             OnClick (fun _ -> source.update((source.current + 1) % 3))
-            Classes [ Tw.absolute; Tw.``w-full``; Tw.``h-screen``; Tw.``bg-blue-100``; Tw.``overflow-hidden`` ]
+            Classes [ Tw.absolute; Tw.``w-full``; Tw.``h-screen``; Tw.``bg-blue-100``; Tw.``overflow-hidden``; Tw.flex; Tw.``items-center``; Tw.``justify-center`` ]
             Children (
                 transitions
                 |> Seq.map (fun data ->
@@ -32,12 +31,13 @@ let render =
                         Classes [
                             Tw.``cursor-pointer``
                             Tw.absolute
-                            Tw.``w-full``
-                            Tw.``h-full``
+                            Tw.``w-64``
+                            Tw.``h-64``
                             Tw.``text-6xl``
                             Tw.``text-center``
                             Tw.``text-white``
                             Tw.flex
+                            Tw.rounded
                             Tw.``items-center``
                             Tw.``justify-center``
                             if data.item = 0 then

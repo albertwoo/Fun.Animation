@@ -37,8 +37,8 @@ type SpringHooks() =
         Bindings.SpringHooks.useTrailLazy(num, fun () -> fn () |> Property<'Item, 'Option>.toObj)
         |> unbox<Bindings.ITrail<'Option>>
 
-    static member inline useChain(springRefs: Fable.React.IRefHook<_>[], timeSteps: float[]) =
-        Bindings.SpringHooks.useChain(unbox springRefs, unbox timeSteps)
+    static member inline useChain(springRefs: Fable.React.IRefHook<_>[], timeSteps: float[], ?timeFrame: int) =
+        Bindings.SpringHooks.useChain(unbox springRefs, unbox timeSteps, timeFrame |> Option.defaultValue 1000)
 
     static member inline useTransition(items: 'Item[], map: 'Item -> 'Key, props: Property<'Item, 'Option> list) =
         Bindings.SpringHooks.useTransition(items, map, props |> Property<'Item, 'Option>.toObj)

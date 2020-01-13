@@ -51,7 +51,7 @@ type ISpringHooks =
     [<Emit("$0.useTrail($1, $2)")>]
     abstract useTrailLazy: int * (unit -> 'Option) -> ITrail<obj>
 
-    abstract useChain: obj[] * obj [] -> unit
+    abstract useChain: refs: obj[] * timeSteps: obj [] * ?timeFrame: int -> unit
 
     [<Emit("$0.useTransition($1, $2, $3)")>]
     abstract useTransition: 'Item[] * ('Item -> 'Key) * 'Option -> ITransition<'Item, 'Option> []
@@ -94,7 +94,7 @@ let SpringHooks: ISpringHooks =
             member _.useSpringsLazy (_, _) = DummyData.mutipleValues 
             member _.useTrail _ _ = obj()
             member _.useTrailLazy (_, _) = DummyData.trail
-            member _.useChain (_, _) = ()
+            member _.useChain (_, _, _) = ()
             member _.useTransition (_, _, _) = [||]
     }
 
