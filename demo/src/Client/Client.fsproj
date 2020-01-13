@@ -13,6 +13,7 @@
     <Compile Include="App\ReactSpringDemos\TrailDemo.fs" />
     <Compile Include="App\ReactSpringDemos\TransitionDemo.fs" />
     <Compile Include="App\ReactSpringDemos\ChainDemo.fs" />
+    <Compile Include="App\ReactSpringDemos\DraggableListDemo.fs" />
     <Compile Include="App\Views.fs" />
     <Compile Include="Startup.fs" />
   </ItemGroup>

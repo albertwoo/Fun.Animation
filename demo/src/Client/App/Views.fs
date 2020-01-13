@@ -9,5 +9,6 @@ let app state dispatch =
     //ReactSpringDemos.SpringDemo.render()
     //ReactSpringDemos.SpringsDemo.render()
     //ReactSpringDemos.TrailDemo.render()
-    ReactSpringDemos.TransitionDemo.render()
+    //ReactSpringDemos.TransitionDemo.render()
     //ReactSpringDemos.ChainDemo.render()
+    ReactSpringDemos.DraggableListDemo.render()

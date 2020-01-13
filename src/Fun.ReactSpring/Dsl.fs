@@ -5,6 +5,8 @@ namespace Fun.ReactSpring
 module Interpolation =
     let inline map m prop = Bindings.interpolate(prop, m)
 
+    let inline mix (props: obj[]) map = Bindings.interpolateArr props map
+
 
 type SpringHooks() =
     static member inline useSpring (props: Property<'Item, 'Option> seq) =
