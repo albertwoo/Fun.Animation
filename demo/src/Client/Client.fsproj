@@ -26,6 +26,7 @@
     <PackageReference Include="Zanaptak.TypedCssClasses" Version="0.2.0" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\src\Fun.ReactGesture\Fun.ReactGesture.fsproj" />
     <ProjectReference Include="..\..\..\src\Fun.ReactSpring\Fun.ReactSpring.fsproj" />
   </ItemGroup>
 </Project>
