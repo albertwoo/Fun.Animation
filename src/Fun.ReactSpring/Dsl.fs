@@ -3,9 +3,9 @@ namespace Fun.ReactSpring
 
 [<RequireQualifiedAccess>]
 module Interpolation =
-    let inline map m prop = Bindings.interpolate(prop, m)
-
-    let inline mix (props: obj[]) map = Bindings.interpolateArr props map
+    let inline map (map: 'Prop -> 'T) (prop: obj) = Bindings.interpolate (prop, map)
+    //let inline mix (map: 'Prop -> 'T) props = Bindings.interpolate props map
+    let inline mix map (props: obj[]) = Bindings.interpolateArr props map
 
 
 type SpringHooks() =
