@@ -99,5 +99,4 @@ let SpringHooks: ISpringHooks =
     }
 
 
-let inline interpolate (prop, map) = prop?interpolate(map)
-let interpolateArr props map: obj = import "interpolate" "react-spring"
+let interpolateArr(props, map) = import "interpolate" "react-spring"

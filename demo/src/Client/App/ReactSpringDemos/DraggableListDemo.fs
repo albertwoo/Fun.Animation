@@ -1,7 +1,6 @@
 module Client.App.ReactSpringDemos.DraggableListDemo
 
 open System
-open Fable.Core.JsInterop
 open Fable.React
 open Fable.React.Props
 open Fun.ReactSpring
@@ -18,6 +17,7 @@ let swap x y (source: 'T[]) =
     copy.[x] <- source.[y]
     copy.[y] <- source.[x]
     copy
+
 
 let render =
     FunctionComponent.Of (
@@ -79,8 +79,11 @@ let render =
                                         LineHeight "90px"
                                         Width 200
                                         ZIndex data.zIndex
-                                        BoxShadow (box data.shadow |> Interpolation.map (fun x -> sprintf "rgba(0, 0, 0, 0.15) 0px %dpx %dpx 0px" x (x * 2)))
-                                        Transform (box data.y |> Interpolation.map (fun y -> sprintf "translate3d(0,%fpx,0) scale(%f)" y 1.))
+                                        BoxShadow (AnimatedValue(data.shadow).map(fun x -> sprintf "rgba(0, 0, 0, 0.15) 0px %dpx %dpx 0px" x (x * 2)))
+                                        Transform (
+                                            [| box data.y; box data.scale |]
+                                            |> Interpolation.map (fun (y, s) -> sprintf "translate3d(0,%fpx,0) scale(%f)" y s)
+                                        )
                                     ]
                                     yield! toHTMLProps(bind.bind(i))
                                 ]

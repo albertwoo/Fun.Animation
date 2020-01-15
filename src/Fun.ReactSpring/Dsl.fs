@@ -1,12 +1,29 @@
 namespace Fun.ReactSpring
 
+open Fable.Core.JsInterop
+
+
+type AnimatedValue(v) =
+    member inline _.map(map: 'From -> 'To) =
+        v?interpolate(Utils.mapJsArgs(fun x ->
+            FSharp.Reflection.FSharpValue.MakeTuple(x, typeof<'From>)
+            |> unbox<'From>
+            |> map
+        ))
+
 
 [<RequireQualifiedAccess>]
 module Interpolation =
-    let inline map (map: 'Prop -> 'T) (prop: obj) = Bindings.interpolate (prop, map)
-    //let inline mix (map: 'Prop -> 'T) props = Bindings.interpolate props map
-    let inline mix map (props: obj[]) = Bindings.interpolateArr props map
-
+    let inline map (mapper: 'From -> 'To) (props: obj[]) =
+        Bindings.interpolateArr(
+            props,
+            Utils.mapJsArgs(fun x ->
+                FSharp.Reflection.FSharpValue.MakeTuple(x, typeof<'From>)
+                |> unbox<'From>
+                |> mapper
+            )
+        )
+    
 
 type SpringHooks() =
     static member inline useSpring (props: Property<'Item, 'Option> seq) =

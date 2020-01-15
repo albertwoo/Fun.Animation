@@ -21,9 +21,6 @@ let render =
                     1.1
                 |]
         
-            let tran x y s =
-                sprintf "perspective(600px) rotateX(%ddeg) rotateY(%ddeg) scale(%A)" x y s
-
             div </> [
                 Classes [ Tw.flex; Tw.``items-center``; Tw.``justify-center``; Tw.``h-screen``; Tw.``w-full`` ]
                 Children [
@@ -31,7 +28,9 @@ let render =
                         Classes [ Tw.``w-64``; Tw.``h-64``; Tw.rounded; Tw.``shadow-md``; Tw.``hover:shadow-lg``; Tw.``bg-blue-300`` ]
                         Style [
                             WillChange "transform"
-                            Transform (Interpolation.map tran spring.current.xys)
+                            Transform (AnimatedValue(spring.current.xys).map (fun (x, y, s) ->
+                                sprintf "perspective(600px) rotateX(%ddeg) rotateY(%ddeg) scale(%A)" x y s
+                            ))
                         ]
                         OnMouseMove (fun x ->
                             spring.update {| xys = calc x.clientX x.clientY |}

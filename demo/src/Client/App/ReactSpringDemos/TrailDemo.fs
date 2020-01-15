@@ -5,7 +5,6 @@ open Fable.React.Props
 open Fun.ReactSpring
 
 
-
 let render =
   FunctionComponent.Of (
     fun () ->
@@ -77,12 +76,7 @@ let render =
                                     WillChange "transform"
                                     Opacity 0.5
                                     BoxShadow "10px 10px 5px 0px rgba(0, 0, 0, 0.75)"
-                                    Transform (
-                                        data.xy
-                                        |> Interpolation.map (fun x y ->
-                                            sprintf "translate3d(%dpx,%dpx,0) translate3d(-50%%,-50%%,0)" x y
-                                        )
-                                    )
+                                    Transform (AnimatedValue(data.xy).map (fun (x, y) -> sprintf "translate3d(%dpx,%dpx,0) translate3d(-50%%,-50%%,0)" x y))
                                 ]
                             ]
                         )

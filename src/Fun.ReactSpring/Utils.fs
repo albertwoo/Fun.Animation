@@ -5,6 +5,10 @@ open Fable.Core.JsInterop
 open Fable.React
 
 
+[<Emit("(...args) => $0(args)")>]
+let mapJsArgs f: obj -> obj = jsNative
+
+
 let animatedEles: obj = import "animated" "react-spring"
 
 
