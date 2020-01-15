@@ -4,12 +4,14 @@ open Fable.Core.JsInterop
 
 
 type AnimatedValue(v) =
-    member inline _.map(map: 'From -> 'To) =
-        v?interpolate(Utils.mapJsArgs(fun x ->
+    member _.value = v
+    member inline this.map(mapper: 'From -> 'To) =
+        this.value?interpolate(Utils.mapJsArgs(fun x ->
             FSharp.Reflection.FSharpValue.MakeTuple(x, typeof<'From>)
             |> unbox<'From>
-            |> map
+            |> mapper
         ))
+        |> unbox<'To>
 
 
 [<RequireQualifiedAccess>]

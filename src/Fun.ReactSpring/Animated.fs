@@ -1,7 +1,19 @@
 [<RequireQualifiedAccess>]
 module Fun.ReactSpring.Animated
 
+open Fable.React
 open Utils
+open Bindings
+
+
+let inline animatedEle ty props childs =
+  let ty =
+    #if FABLE_COMPILER
+    generateTy animatedEles ty
+    #else
+    ty
+    #endif
+  domEl ty props childs
 
 
 let inline a props childs = animatedEle "a" props childs

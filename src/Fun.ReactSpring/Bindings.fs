@@ -84,6 +84,9 @@ module DummyData =
         }
 
 
+let animatedEles: obj = import "animated" "react-spring"
+
+
 [<Import("*", "react-spring")>]
 let SpringHooks: ISpringHooks =
     {
