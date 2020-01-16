@@ -9,7 +9,7 @@ open Bindings
 let inline animatedEle ty props childs =
   let ty =
     #if FABLE_COMPILER
-    generateTy animatedEles ty
+    getJsValueByKey animatedEles ty
     #else
     ty
     #endif
