@@ -19,20 +19,21 @@ let swap x y (source: 'T[]) =
     copy
 
 
-let render =
+let main =
     FunctionComponent.Of (
         fun () ->
+            let height = 50
             let calc (order: int[], down, originalIndex, curIndex, y) index =
                 if down && index = originalIndex then
                     {|
-                        y = float (curIndex * 100) + y
+                        y = float (curIndex * height) + y
                         scale = 1.1
                         zIndex = "1"
                         shadow = 15
                     |}
                 else
                     {|
-                        y = float ((order |> Seq.findIndex ((=) index)) * 100)
+                        y = float ((order |> Seq.findIndex ((=) index)) * height)
                         scale = 1.
                         zIndex = "0"
                         shadow = 1
@@ -55,14 +56,17 @@ let render =
                         let y = state.movement.y
                         let originalIndex = state.args.[0] |> unbox<int>
                         let curIndex = order.current |> Seq.findIndex ((=) originalIndex)
-                        let curRow = clamp (int (Math.Round((float curIndex * 100. + y) / 100.))) 0 (items.current.Length - 1)
+                        let curRow = clamp (int (Math.Round((float curIndex * float height + y) / float height))) 0 (items.current.Length - 1)
                         let newOrder = swap curIndex curRow order.current
                         springs.update (calc(newOrder, state.down, originalIndex, curIndex, y)) // Feed springs new style data, they'll animate the view without causing a single render
                         if (not state.down) then order.current <- newOrder
                 )
 
             div </> [
-                Classes [ Tw.absolute; Tw.``w-full``; Tw.``h-full``; Tw.``overflow-hidden`` ]
+                Style [
+                    Height (height * items.current.Length)
+                    Width 200
+                ]
                 Children [
                     div </> [
                         Classes [ Tw.``w-64``; Tw.relative ]
@@ -72,11 +76,11 @@ let render =
                                 Animated.div </> [
                                     Key (string i)
                                     Text (string i)
-                                    Classes [ Tw.``cursor-pointer``; Tw.``text-4xl``; Tw.rounded; Tw.``text-center``; Tw.``bg-purple-300``; Tw.``select-none`` ]
+                                    Classes [ Tw.``cursor-pointer``; Tw.rounded; Tw.``text-center``; Tw.``text-white``; Tw.``bg-purple-300``; Tw.``select-none`` ]
                                     Style [
                                         Position PositionOptions.Absolute
-                                        Height "90px"
-                                        LineHeight "90px"
+                                        Height (height - 10)
+                                        LineHeight (sprintf "%dpx" (height - 10))
                                         Width 200
                                         ZIndex data.zIndex
                                         BoxShadow (AnimatedValue(data.shadow).map(fun x -> sprintf "rgba(0, 0, 0, 0.15) 0px %dpx %dpx 0px" x (x * 2)))
@@ -94,3 +98,13 @@ let render =
                 ]
             ]
     )
+
+
+let description =
+    div </> [
+        Children [
+            h2 </> [
+                Text "Drag listg demo"
+            ]
+        ]
+    ]

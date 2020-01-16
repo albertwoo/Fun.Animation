@@ -5,7 +5,7 @@ open Fable.React.Props
 open Fun.ReactSpring
 
 
-let render =
+let main =
   FunctionComponent.Of (
     fun () ->
         let trail =
@@ -28,6 +28,11 @@ let render =
             )
         
         div </> [
+            Style [
+                Height 300
+                Width 400
+                Position PositionOptions.Relative
+            ]
             Children [
                 svg [
                   Style [
@@ -56,7 +61,6 @@ let render =
                     Style [
                         Height 300
                         Width 400
-                        Position PositionOptions.Absolute
                         BackgroundColor "lightgray"
                         Filter "url('#goo')"
                         OverflowStyle OverflowOptions.Hidden

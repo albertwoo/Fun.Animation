@@ -5,7 +5,7 @@ open Fable.React.Props
 open Fun.ReactSpring
 
 
-let render =
+let main =
     FunctionComponent.Of (
         fun () ->
             let isOpen = Hooks.useState false
@@ -46,10 +46,9 @@ let render =
             div </> [
                 Classes [
                     Tw.``w-full``
-                    Tw.``h-screen``
+                    Tw.``h-64``
                     Tw.``overflow-hidden``
                     Tw.``select-none``
-                    Tw.``bg-blue-100``
                     Tw.flex
                     Tw.``items-center``
                     Tw.``justify-center``

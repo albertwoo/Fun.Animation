@@ -5,7 +5,7 @@ open Fable.React.Props
 open Fun.ReactSpring
 
 
-let render =
+let main =
     FunctionComponent.Of (
       fun () ->
         let source = Hooks.useState 0
@@ -22,7 +22,7 @@ let render =
 
         div </> [
             OnClick (fun _ -> source.update((source.current + 1) % 3))
-            Classes [ Tw.absolute; Tw.``w-full``; Tw.``h-screen``; Tw.``bg-blue-100``; Tw.``overflow-hidden``; Tw.flex; Tw.``items-center``; Tw.``justify-center`` ]
+            Classes [ Tw.``overflow-hidden``; Tw.flex; Tw.``items-center``; Tw.``justify-center`` ]
             Children (
                 transitions
                 |> Seq.map (fun data ->
@@ -36,6 +36,7 @@ let render =
                             Tw.``text-6xl``
                             Tw.``text-center``
                             Tw.``text-white``
+                            Tw.``select-none``
                             Tw.flex
                             Tw.rounded
                             Tw.``items-center``

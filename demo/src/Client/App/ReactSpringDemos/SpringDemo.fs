@@ -5,7 +5,7 @@ open Fable.React.Props
 open Fun.ReactSpring
 
 
-let render =
+let main =
     FunctionComponent.Of(
         fun () ->
             let spring =
@@ -22,10 +22,10 @@ let render =
                 |]
         
             div </> [
-                Classes [ Tw.flex; Tw.``items-center``; Tw.``justify-center``; Tw.``h-screen``; Tw.``w-full`` ]
+                Classes [ Tw.flex; Tw.``items-center``; Tw.``justify-center`` ]
                 Children [
                     Animated.div </> [
-                        Classes [ Tw.``w-64``; Tw.``h-64``; Tw.rounded; Tw.``shadow-md``; Tw.``hover:shadow-lg``; Tw.``bg-blue-300`` ]
+                        Classes [ Tw.``w-64``; Tw.``h-64``; Tw.rounded; Tw.``shadow-md``; Tw.``hover:shadow-lg``; Tw.``bg-green-300`` ]
                         Style [
                             WillChange "transform"
                             Transform (AnimatedValue(spring.current.xys).map (fun (x, y, s) ->
