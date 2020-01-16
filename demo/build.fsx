@@ -91,7 +91,6 @@ Target.create "InstallPackages" <| fun _ ->
 
 
 Target.create "Build" <| fun _ ->
-    dotnet "build" serverPath
     yarn "webpack -p" clientPath
 
 
@@ -124,8 +123,6 @@ Target.create "RunServer" <| fun _ ->
 
 
 Target.create "Bundle" <| fun _ ->
-    let publishArgs = sprintf "publish -c Release -o \"%s\"" publishDir
-    dotnet publishArgs serverPath
     clearDeployFolder publishDir
 
     let clientDir = publishDir </> "wwwroot"

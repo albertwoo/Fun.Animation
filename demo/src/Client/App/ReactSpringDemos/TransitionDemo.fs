@@ -22,25 +22,21 @@ let main =
 
         div </> [
             OnClick (fun _ -> source.update((source.current + 1) % 3))
-            Classes [ Tw.``overflow-hidden``; Tw.flex; Tw.``items-center``; Tw.``justify-center`` ]
+            Classes [ Tw.``overflow-hidden``; Tw.relative ]
+            Style [ Height 200; Width 400 ]
             Children (
                 transitions
                 |> Seq.map (fun data ->
                     Animated.div </> [
                         Key (string data.key)
                         Classes [
-                            Tw.``cursor-pointer``
                             Tw.absolute
-                            Tw.``w-64``
-                            Tw.``h-64``
+                            Tw.``cursor-pointer``
                             Tw.``text-6xl``
                             Tw.``text-center``
                             Tw.``text-white``
                             Tw.``select-none``
-                            Tw.flex
                             Tw.rounded
-                            Tw.``items-center``
-                            Tw.``justify-center``
                             if data.item = 0 then
                                 Tw.``bg-pink-400``
                             elif data.item = 1 then
@@ -49,6 +45,9 @@ let main =
                                 Tw.``bg-purple-400``
                         ]
                         Style [
+                            Width 400
+                            Height 200
+                            LineHeight "200px"
                             TextShadow "0px 2px 40px #00000020, 0px 2px 5px #00000030"
                             WillChange "transform, opacity"
                             Opacity data.props.opacity

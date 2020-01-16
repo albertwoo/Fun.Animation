@@ -98,13 +98,3 @@ let main =
                 ]
             ]
     )
-
-
-let description =
-    div </> [
-        Children [
-            h2 </> [
-                Text "Drag listg demo"
-            ]
-        ]
-    ]
