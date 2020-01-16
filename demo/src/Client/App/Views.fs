@@ -32,6 +32,15 @@ let landingPage =
                 Href "https://www.react-spring.io/"
                 Classes [ Tw.``text-purple-400``; Tw.``hover:text-purple-300`` ]
             ]
+            a </> [
+                Href "https://github.com/albertwoo/Fun.Animation"
+                Classes [ Tw.block; Tw.``mt-04`` ]
+                Children [
+                    span </> [
+                        Classes [ Fa.fab; Fa.``fa-github``; Tw.``text-green-600`` ]
+                    ]
+                ]
+            ]
         ]
     ]
 

@@ -2,11 +2,11 @@
 
     <PropertyGroup>
         <TargetFramework>netstandard2.0</TargetFramework>
-        <Version>0.0.1-beta</Version>
+        <Version>1.0.0-beta1</Version>
         <Company>https://www.slaveoftime.fun</Company>
         <Description>React-Spring bindging for fable</Description>
-        <PackageProjectUrl>https://github.com/albertwoo/Fun.ReactSpring</PackageProjectUrl>
-        <RepositoryUrl>https://github.com/albertwoo/Fun.ReactSpring</RepositoryUrl>
+        <PackageProjectUrl>https://github.com/albertwoo/Fun.Animation</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/albertwoo/Fun.Animation</RepositoryUrl>
         <PackageTags>Fable, React-Spring</PackageTags>
         <Authors>slaveoftime</Authors>
         <NpmDependencies>

@@ -5,6 +5,13 @@
         <NpmDependencies>
             <NpmPackage Name="react-use-gesture" Version="7.0.0-beta.10" />
         </NpmDependencies>
+        <Version>1.0.0-beta1</Version>
+        <Authors>slaveoftime</Authors>
+        <Company>https://www.slaveoftime.fun</Company>
+        <Description>React-UseGesture bindging for fable</Description>
+        <PackageProjectUrl>https://github.com/albertwoo/Fun.Animation</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/albertwoo/Fun.Animation</RepositoryUrl>
+        <PackageTags>Fable, React-UseGesture</PackageTags>
     </PropertyGroup>
 
     <ItemGroup>
