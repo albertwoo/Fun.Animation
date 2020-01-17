@@ -13,7 +13,6 @@ let pages = [
 ]
 
 
-
 let main =
     FunctionComponent.Of(
         fun () ->

@@ -4,7 +4,7 @@ open Fable.Core
 open Fable.Core.JsInterop
 
 
-type private Key = int
+type SpringKey = int
 
 
 [<RequireQualifiedAccess>]
@@ -79,14 +79,14 @@ type SpringProp<'Item, 'Option> =
     | [<CompiledName("leave")>] LeaveByFn of ('Item -> 'Option)
     | Trail of int
     | To of 'Option
-    | [<CompiledName("to")>] ToByFn of (Key -> 'Option)
+    | [<CompiledName("to")>] ToByFn of (SpringKey -> 'Option)
     | [<CompiledName("to")>] ToByArray of 'Option list
     | Delay of float
-    | DelayByFn of (Key -> float)
+    | DelayByFn of (SpringKey -> float)
     | Config of SpringConfig list
-    | ConfigByFn of (Key -> SpringConfig list)
+    | ConfigByFn of (SpringKey -> SpringConfig list)
     | Reverse of bool
-    | OnStart of (Key -> unit)
+    | OnStart of (SpringKey -> unit)
     | OnRest of (unit -> unit)
     | OnFrame of (unit -> unit)
     | Custom of (string * obj)

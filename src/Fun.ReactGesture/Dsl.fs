@@ -4,7 +4,6 @@ module Fun.ReactGesture.Dsl
 open Fable.Core
 open Fable.Core.JsInterop
 open Fable.React
-open Fable.React.Props
 
 
 [<RequireQualifiedAccess; Erase>]
@@ -15,26 +14,7 @@ type DomTarget =
 [<RequireQualifiedAccess; Erase>]
 type Initial =
     | Vector of float[]
-    | VectorFn of (unit -> float[])
-
-
-type IConfigProp =
-    interface end
-
-
-[<RequireQualifiedAccess>]
-type ConfigProp =
-    | DomTarget of DomTarget
-    | [<CompiledName("eventOptions.capture")>] Capture of bool
-    | [<CompiledName("eventOptions.passive")>] Passive of bool
-    | [<CompiledName("eventOptions.pointer")>] Pointer of bool
-    | Window of Browser.Types.Node
-    | Enabled of bool
-    | Initial of Initial
-    | Threshold of float
-    | Rubberband of bool
-    | [<Erase>] Custom of string * obj
-    interface IConfigProp
+    | VectorByFn of (unit -> float[])
 
 [<RequireQualifiedAccess; StringEnum>]
 type Xy =
@@ -48,61 +28,67 @@ type Bound =
     | Left
     | Right
 
-type XyConfigProp() =
-    static member Axis (xOry: Xy) = ConfigProp.Custom ("axis", xOry)
-    static member LockDirection (b: bool) = ConfigProp.Custom ("lockDirection", b)
-    static member Bounds (bounds: Bound seq) = ConfigProp.Custom ("bounds", keyValueList CaseRules.LowerFirst bounds)
-
 [<RequireQualifiedAccess>]
 type MinMax =
     | Min of float
     | Max of float
 
-type PinchConfigProp() =
-    static member DistanceBounds (bounds: MinMax seq) = ConfigProp.Custom("distanceBounds", keyValueList CaseRules.LowerFirst bounds)
-    static member AngleBounds (bounds: MinMax seq) = ConfigProp.Custom("angleBounds", keyValueList CaseRules.LowerFirst bounds)
+
+type IGestureProp =
+    interface end
 
 
 [<RequireQualifiedAccess>]
-type Gesture =
-    | OnDrag of (Bindings.State -> unit)
-    | OnDragStart of (Bindings.State -> unit)
-    | OnDragEnd of (Bindings.State -> unit)
-    | OnPinch of (Bindings.State -> unit)
-    | OnPinchStart of (Bindings.State -> unit)
-    | OnPinchEnd of (Bindings.State -> unit)
-    | OnScroll of (Bindings.State -> unit)
-    | OnScrollStart of (Bindings.State -> unit)
-    | OnScrollEnd of (Bindings.State -> unit)
-    | OnMove of (Bindings.State -> unit)
-    | OnMoveStart of (Bindings.State -> unit)
-    | OnMoveEnd of (Bindings.State -> unit)
-    | OnWheel of (Bindings.State -> unit)
-    | OnWheelStart of (Bindings.State -> unit)
-    | OnWheelEnd of (Bindings.State -> unit)
-    | OnHover of (Bindings.State -> unit)
+type GestureProp =
+    | DomTarget of DomTarget
+    | [<CompiledName("eventOptions.capture")>] Capture of bool
+    | [<CompiledName("eventOptions.passive")>] Passive of bool
+    | [<CompiledName("eventOptions.pointer")>] Pointer of bool
+    | Window of Browser.Types.Node
+    | Enabled of bool
+    | Initial of Initial
+    | Threshold of float
+    | Rubberband of bool
+    | [<Erase>] Custom of string * obj
+    interface IGestureProp
+
+type XyConfigProp =
+    | Axis of Xy
+    | LockDirection of bool
+    interface IGestureProp
+    static member Bounds (bounds: Bound seq) = GestureProp.Custom ("bounds", keyValueList CaseRules.LowerFirst bounds)
+
+type PinchConfigProp =
+    interface IGestureProp
+    static member DistanceBounds (bounds: MinMax seq) = GestureProp.Custom("distanceBounds", keyValueList CaseRules.LowerFirst bounds)
+    static member AngleBounds (bounds: MinMax seq) = GestureProp.Custom("angleBounds", keyValueList CaseRules.LowerFirst bounds)
 
 
-let toObj props =
-    match props with
-    | None -> box {||}
-    | Some x -> keyValueList CaseRules.LowerFirst x |> box
-
-[<Emit("
-Object.keys($0).map(x => {
-    return [x, $0[x]];
-});
-")>]
-let jsObjKeyValues obj: (string * obj)[] = jsNative
-
-let toHTMLProps obj = jsObjKeyValues obj |> Seq.map (HTMLAttr.Custom >> unbox<IHTMLProp>)
+[<RequireQualifiedAccess>]
+type GestureEvent =
+    | OnDrag of (Bindings.IGestureState -> unit)
+    | OnDragStart of (Bindings.IGestureState -> unit)
+    | OnDragEnd of (Bindings.IGestureState -> unit)
+    | OnPinch of (Bindings.IGestureState -> unit)
+    | OnPinchStart of (Bindings.IGestureState -> unit)
+    | OnPinchEnd of (Bindings.IGestureState -> unit)
+    | OnScroll of (Bindings.IGestureState -> unit)
+    | OnScrollStart of (Bindings.IGestureState -> unit)
+    | OnScrollEnd of (Bindings.IGestureState -> unit)
+    | OnMove of (Bindings.IGestureState -> unit)
+    | OnMoveStart of (Bindings.IGestureState -> unit)
+    | OnMoveEnd of (Bindings.IGestureState -> unit)
+    | OnWheel of (Bindings.IGestureState -> unit)
+    | OnWheelStart of (Bindings.IGestureState -> unit)
+    | OnWheelEnd of (Bindings.IGestureState -> unit)
+    | OnHover of (Bindings.IGestureState -> unit)
 
 
 type GestureHooks() =
-    static member inline useGesture(gestures: Gesture seq, ?props: IConfigProp seq) = Bindings.Hooks.GestureHooks.useGesture (keyValueList CaseRules.LowerFirst gestures |> unbox) (toObj props |> unbox)
-    static member inline useDrag(fn, ?props: IConfigProp seq)       = Bindings.Hooks.GestureHooks.useDrag fn (toObj props |> unbox)
-    static member inline useMove(fn, ?props: IConfigProp seq)       = Bindings.Hooks.GestureHooks.useMove fn (toObj props |> unbox)
-    static member inline useHover(fn, ?props: IConfigProp seq)      = Bindings.Hooks.GestureHooks.useHover fn (toObj props |> unbox)
-    static member inline useScroll(fn, ?props: IConfigProp seq)     = Bindings.Hooks.GestureHooks.useScroll fn (toObj props |> unbox)
-    static member inline useWheel(fn, ?props: IConfigProp seq)      = Bindings.Hooks.GestureHooks.useWheel fn (toObj props |> unbox)
-    static member inline usePinch(fn, ?props: IConfigProp seq)      = Bindings.Hooks.GestureHooks.usePinch fn (toObj props |> unbox)
+    static member inline useGesture(gestures: GestureEvent seq, ?props: IGestureProp seq) = Bindings.ssrGesture (fun () -> Bindings.useGesture (keyValueList CaseRules.LowerFirst gestures |> unbox) (Bindings.fromOptionToJsObj props |> unbox))
+    static member inline useDrag(onEvent, ?props: IGestureProp seq)   = Bindings.ssrGesture (fun () -> Bindings.useDrag onEvent (Bindings.fromOptionToJsObj props |> unbox))
+    static member inline useMove(onEvent, ?props: IGestureProp seq)   = Bindings.ssrGesture (fun () -> Bindings.useMove onEvent (Bindings.fromOptionToJsObj props |> unbox))
+    static member inline useHover(onEvent, ?props: IGestureProp seq)  = Bindings.ssrGesture (fun () -> Bindings.useHover onEvent (Bindings.fromOptionToJsObj props |> unbox))
+    static member inline useScroll(onEvent, ?props: IGestureProp seq) = Bindings.ssrGesture (fun () -> Bindings.useScroll onEvent (Bindings.fromOptionToJsObj props |> unbox))
+    static member inline useWheel(onEvent, ?props: IGestureProp seq)  = Bindings.ssrGesture (fun () -> Bindings.useWheel onEvent (Bindings.fromOptionToJsObj props |> unbox))
+    static member inline usePinch(onEvent, ?props: IGestureProp seq)  = Bindings.ssrGesture (fun () -> Bindings.usePinch onEvent (Bindings.fromOptionToJsObj props |> unbox))

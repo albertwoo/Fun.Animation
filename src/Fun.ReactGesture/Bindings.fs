@@ -1,32 +1,33 @@
-namespace Fun.ReactGesture.Bindings
+module Fun.ReactGesture.Bindings
 
 open Fable.Core
 open Fable.Core.JsInterop
+open Fable.React.Isomorphic
 
 
-type Point =
+type IGesturePoint =
     [<Emit("$0[0]")>]
     abstract x: float
     [<Emit("$0[1]")>]
     abstract y: float
 
-type State =
+type IGestureState =
     // the source event
     abstract event: Browser.Types.Event
     // [x,y] values (pointer position or scroll offset)
-    abstract xy: Point
+    abstract xy: IGesturePoint
     // previous xy
-    abstract previous: Point
+    abstract previous: IGesturePoint
     // xy value when the gesture started
-    abstract initial: Point
+    abstract initial: IGesturePoint
     // last gesture offset (xy - initial)
-    abstract movement: Point
+    abstract movement: IGesturePoint
     // movement delta (movement - previous movement)
-    abstract delta: Point
+    abstract delta: IGesturePoint
     // offset since the first gesture
-    abstract offset: Point
+    abstract offset: IGesturePoint
     // offset when the last gesture started
-    abstract lastOffset: Point
+    abstract lastOffset: IGesturePoint
     // momentum of the gesture per axis
     abstract vxvy: float
     // absolute velocity of the gesture
@@ -81,63 +82,52 @@ type State =
     abstract pinching: bool
 
 
-type PinchState =
-    inherit State
+type IPinchState =
+    inherit IGestureState
     // [d,a] absolute distance and angle of the two pointers
-    abstract da: Point
+    abstract da: IGesturePoint
     // momentum of the gesture of distance and rotation
-    abstract vdva: Point
+    abstract vdva: IGesturePoint
     // coordinates of the center between the two touch event
-    abstract origin: Point
+    abstract origin: IGesturePoint
 
 
-type DragState =
-    inherit State
+type IDragState =
+    inherit IGestureState
     // [swipeX, swipeY] 0 if no swipe detected, -1 or 1 otherwise
-    abstract swipe: Point
+    abstract swipe: IGesturePoint
     // is the drag assimilated to a tap
     abstract tap: bool
 
 
-type Bind =
+type IGestureAttrs =
     [<Emit("$0($1)")>]
     abstract bind: obj -> obj
 
 
-type IConfig = obj
+let fakeGestureAttrs =
+    { new IGestureAttrs with
+        member _.bind _ = obj() }
 
 
-type IGesture =
-    interface end
+let ssrGesture fn =
+    isomorphicExec
+        (fun () -> fn())
+        (fun () -> fakeGestureAttrs)
+        ()
+
+    
+let fromOptionToJsObj props =
+    match props with
+    | None -> box {||}
+    | Some x -> keyValueList CaseRules.LowerFirst x |> box
 
 
+let useGesture gestureEvents config: IGestureAttrs = import "useGesture" "react-use-gesture"
 
-type IGestureHooks =
-    abstract member useGesture: IGesture -> IConfig -> Bind
-    abstract member useDrag:    (DragState -> unit) -> IConfig -> Bind
-    abstract member useMove:    (State -> unit) -> IConfig -> Bind
-    abstract member useHover:   (State -> unit) -> IConfig -> Bind
-    abstract member useScroll:  (State -> unit) -> IConfig -> Bind
-    abstract member useWheel:   (State -> unit) -> IConfig -> Bind
-    abstract member usePinch:   (PinchState -> unit) -> IConfig -> Bind
-
-
-module Hooks =
-    let dummyBind =
-        {
-            new Bind with
-                member _.bind _ = obj()
-        }
-
-    [<Import("*", "react-use-gesture")>]
-    let GestureHooks =
-        {
-            new IGestureHooks with
-                member _.useGesture _ _ = dummyBind
-                member _.useDrag _ _ = dummyBind
-                member _.useMove _ _ = dummyBind
-                member _.useHover _ _ = dummyBind
-                member _.useScroll _ _ = dummyBind
-                member _.useWheel _ _ = dummyBind
-                member _.usePinch _ _ = dummyBind
-        }
+let useDrag     (onEvt: IGestureState -> unit) config: IGestureAttrs = import "useDrag" "react-use-gesture"
+let useMove     (onEvt: IGestureState -> unit) config: IGestureAttrs = import "useMove" "react-use-gesture"
+let useHover    (onEvt: IGestureState -> unit) config: IGestureAttrs = import "useHover" "react-use-gesture"
+let useScroll   (onEvt: IGestureState -> unit) config: IGestureAttrs = import "useScroll" "react-use-gesture"
+let useWheel    (onEvt: IGestureState -> unit) config: IGestureAttrs = import "useWheel" "react-use-gesture"
+let usePinch    (onEvt: IGestureState -> unit) config: IGestureAttrs = import "usePinch" "react-use-gesture"
