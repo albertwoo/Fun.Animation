@@ -68,14 +68,14 @@ let app state dispatch =
             demoCard [
                 DemoCardProp.View (SpringsDemo.main())
                 DemoCardProp.Title "useSprings"
-                DemoCardProp.Description "You can hover to check the animation"
+                DemoCardProp.Description "You can drag image to make it longer"
                 DemoCardProp.ContainerCss [ Tw.``bg-gray-100`` ]
             ]
 
             demoCard [
                 DemoCardProp.View (TransitionDemo.main())
                 DemoCardProp.Title "useTransition"
-                DemoCardProp.Description "You can click to trigger the animation"
+                DemoCardProp.Description "You can click or use mouse wheel to trigger the animation"
                 DemoCardProp.ContainerCss [ Tw.``bg-pink-100`` ]
             ]
 

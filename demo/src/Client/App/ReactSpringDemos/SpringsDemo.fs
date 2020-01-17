@@ -3,6 +3,7 @@ module Client.App.ReactSpringDemos.SpringsDemo
 open Fable.React
 open Fable.React.Props
 open Fun.ReactSpring
+open Fun.ReactGesture
 
 
 let pages = [
@@ -16,19 +17,25 @@ let pages = [
 let main =
     FunctionComponent.Of(
         fun () ->
-            let calc index i =
+            let calc y index i =
                 {|
-                    width = if i = index then 200. else 100.
+                    width = if i = index then 100. + y else 100.
                 |}
 
             let springs =
                 SpringHooks.useSprings(
                     pages.Length,
                     (fun i -> [
-                        SpringProp.To (calc i -1)
+                        SpringProp.To (calc 0. i -1)
                         SpringProp.Config SpringConfigs.Slow
                     ])
                )
+
+            let gestureAttrs =
+                GestureHooks.useDrag (fun state ->
+                    let index = state.args.[0] |> unbox<int>
+                    if state.down then springs.update (calc state.movement.x index)
+                )
 
             div </> [
                 Children (
@@ -37,13 +44,13 @@ let main =
                         Animated.div </> [
                             Children [
                                 Animated.div </> [
+                                    Classes [ Tw.``cursor-pointer`` ]
                                     Style [
                                         Height 200
                                         Width data.width
                                         BackgroundImage (sprintf "url(%s)" pages.[index])
                                     ]
-                                    OnMouseEnter (fun _ -> springs.update(calc index))
-                                    OnMouseLeave (fun _ -> springs.update(calc index))
+                                    yield! toHTMLProps(gestureAttrs.bind index)
                                 ]
                             ]
                         ]
