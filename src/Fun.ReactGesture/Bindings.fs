@@ -127,7 +127,7 @@ let useGesture gestureEvents config: IGestureAttrs = import "useGesture" "react-
 
 let useDrag     (onEvt: IGestureState -> unit) config: IGestureAttrs = import "useDrag" "react-use-gesture"
 let useMove     (onEvt: IGestureState -> unit) config: IGestureAttrs = import "useMove" "react-use-gesture"
-let useHover    (onEvt: IGestureState -> unit) config: IGestureAttrs = import "useHover" "react-use-gesture"
+//let useHover    (onEvt: IGestureState -> unit) config: IGestureAttrs = import "useHover" "react-use-gesture"
 let useScroll   (onEvt: IGestureState -> unit) config: IGestureAttrs = import "useScroll" "react-use-gesture"
 let useWheel    (onEvt: IGestureState -> unit) config: IGestureAttrs = import "useWheel" "react-use-gesture"
 let usePinch    (onEvt: IGestureState -> unit) config: IGestureAttrs = import "usePinch" "react-use-gesture"
