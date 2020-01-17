@@ -48,6 +48,15 @@ type Property<'Item, 'Option> =
         )
         |> keyValueList CaseRules.LowerFirst
 
+    static member getDefaultOption props =
+        props
+        |> Seq.tryPick (function
+            | Property.Initial x
+            | Property.From x
+            | Property.To x
+            | Property.Enter x -> Some x
+            | _ -> None)
+
 
 [<RequireQualifiedAccess; StringEnum>]
 type ExtrapolateProp =

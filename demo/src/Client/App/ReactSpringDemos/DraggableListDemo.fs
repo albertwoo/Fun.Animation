@@ -84,10 +84,7 @@ let main =
                                         Width 200
                                         ZIndex data.zIndex
                                         BoxShadow (AnimatedValue(data.shadow).map(fun x -> sprintf "rgba(0, 0, 0, 0.15) 0px %dpx %dpx 0px" x (x * 2)))
-                                        Transform (
-                                            [| box data.y; box data.scale |]
-                                            |> Interpolation.map (fun (y, s) -> sprintf "translate3d(0,%fpx,0) scale(%f)" y s)
-                                        )
+                                        Transform ((data.y, data.scale) |> Interpolation.map (fun (y, s) -> sprintf "translate3d(0,%fpx,0) scale(%f)" y s))
                                     ]
                                     yield! toHTMLProps(bind.bind(i))
                                 ]
