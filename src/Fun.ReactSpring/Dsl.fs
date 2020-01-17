@@ -33,82 +33,82 @@ module Interpolation =
     
 
 type SpringHooks() =
-    static member useSpring (props: Property<'Item, 'Option> seq) =
+    static member useSpring (props: SpringProp<'Item, 'Option> seq) =
         isomorphicExec
             (fun () ->
                 props
-                |> Property<'Item, 'Option>.toObj
+                |> SpringProp<'Item, 'Option>.toObj
                 |> Bindings.SpringHooks.useSpring |> unbox<'Option>
             )
-            (fun () -> props |> Property<'Item, 'Option>.getDefaultOption |> Option.get)
+            (fun () -> props |> SpringProp<'Item, 'Option>.getDefaultOption |> Option.get)
             ()
         
-    static member useSpring (fn: unit -> Property<'Item, 'Option> list) =
+    static member useSpring (fn: unit -> SpringProp<'Item, 'Option> list) =
         isomorphicExec
             (fun () ->
-                Bindings.SpringHooks.useSpringLazy (fun () -> fn() |> Property<'Item, 'Option>.toObj)
+                Bindings.SpringHooks.useSpringLazy (fun () -> fn() |> SpringProp<'Item, 'Option>.toObj)
                 |> unbox<Bindings.ISpring<'Option>>
             )
             (fun () ->
                 { new Bindings.ISpring<'Option> with
-                    member _.current = fn() |> Property<'Item, 'Option>.getDefaultOption |> Option.get
+                    member _.current = fn() |> SpringProp<'Item, 'Option>.getDefaultOption |> Option.get
                     member _.update _ = ()
                     member _.stop () = () }
             )
             ()
 
-    static member useSprings (num: int, props: (Property<'Item, 'Option> list) list) =
+    static member useSprings (num: int, props: (SpringProp<'Item, 'Option> list) list) =
         isomorphicExec
             (fun () ->
                 props
-                |> List.map Property<'Item, 'Option>.toObj
+                |> List.map SpringProp<'Item, 'Option>.toObj
                 |> unbox
                 |> Bindings.SpringHooks.useSprings num
                 |> unbox<Bindings.ISprings<'Option>>
             )
             (fun () ->
                 { new Bindings.ISprings<'Option> with
-                    member _.current = props |> Seq.map (Property<'Item, 'Option>.getDefaultOption >> Option.get) |> Seq.toArray
+                    member _.current = props |> Seq.map (SpringProp<'Item, 'Option>.getDefaultOption >> Option.get) |> Seq.toArray
                     member _.update _ = ()
                     member _.stop () = () }
             )
             ()
 
-    static member useSprings(num: int, fn: int -> Property<'Item, 'Option> list) =
+    static member useSprings(num: int, fn: int -> SpringProp<'Item, 'Option> list) =
         isomorphicExec
             (fun () ->
-                Bindings.SpringHooks.useSpringsLazy(num, fun k -> fn k |> Property<'Item, 'Option>.toObj)
+                Bindings.SpringHooks.useSpringsLazy(num, fun k -> fn k |> SpringProp<'Item, 'Option>.toObj)
                 |> unbox<Bindings.ISprings<'Option>>
             )
             (fun () ->
                 { new Bindings.ISprings<'Option> with
-                    member _.current = [| 0..num-1 |] |> Array.map (fn >> Property<'Item, 'Option>.getDefaultOption >> Option.get)
+                    member _.current = [| 0..num-1 |] |> Array.map (fn >> SpringProp<'Item, 'Option>.getDefaultOption >> Option.get)
                     member _.update _ = ()
                     member _.stop () = () }
             )
             ()
 
-    static member useTrail(num: int, props: Property<'Item, 'Option> list) =
+    static member useTrail(num: int, props: SpringProp<'Item, 'Option> list) =
         isomorphicExec
             (fun () ->
                 props
-                |> Property<'Item, 'Option>.toObj
+                |> SpringProp<'Item, 'Option>.toObj
                 |> Bindings.SpringHooks.useTrail num
                 |> unbox<'Option>
             )
-            (fun () -> props |> Property<'Item, 'Option>.getDefaultOption |> Option.get)
+            (fun () -> props |> SpringProp<'Item, 'Option>.getDefaultOption |> Option.get)
             ()
 
-    static member useTrail(num: int, fn: unit -> Property<'Item, 'Option> list) =
+    static member useTrail(num: int, fn: unit -> SpringProp<'Item, 'Option> list) =
         isomorphicExec
             (fun () ->
-                Bindings.SpringHooks.useTrailLazy(num, fun () -> fn () |> Property<'Item, 'Option>.toObj)
+                Bindings.SpringHooks.useTrailLazy(num, fun () -> fn () |> SpringProp<'Item, 'Option>.toObj)
                 |> unbox<Bindings.ITrail<'Option>>
             )
             (fun () ->
                 { new Bindings.ITrail<'Option> with
                     member _.current =
-                        let x = fn() |> Property<'Item, 'Option>.getDefaultOption |> Option.get
+                        let x = fn() |> SpringProp<'Item, 'Option>.getDefaultOption |> Option.get
                         [| 1..num |] |> Array.map (fun _ -> x)
                     member _.update _ = ()
                     member _.stop () = () }
@@ -121,10 +121,10 @@ type SpringHooks() =
             (fun () -> ())
             ()
 
-    static member useTransition(items: 'Item[], map: 'Item -> int, props: Property<'Item, 'Option> list) =
+    static member useTransition(items: 'Item[], map: 'Item -> int, props: SpringProp<'Item, 'Option> list) =
         isomorphicExec
             (fun () ->
-                Bindings.SpringHooks.useTransition(items, map, props |> Property<'Item, 'Option>.toObj)
+                Bindings.SpringHooks.useTransition(items, map, props |> SpringProp<'Item, 'Option>.toObj)
                 |> unbox<Bindings.ITransition<'Item, 'Option>[]>
             )
             (fun () ->
@@ -133,7 +133,7 @@ type SpringHooks() =
                     let x: Bindings.ITransition<'Item, 'Option> =
                         {
                             item = it
-                            props = props |> Property<'Item, 'Option>.getDefaultOption |> Option.get
+                            props = props |> SpringProp<'Item, 'Option>.getDefaultOption |> Option.get
                             key = map it
                         }
                     x

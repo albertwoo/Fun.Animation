@@ -8,7 +8,64 @@ type private Key = int
 
 
 [<RequireQualifiedAccess>]
-type Property<'Item, 'Option> =
+type SpringConfig =
+  | Mass of float
+  | Tension of float
+  | Friction of float
+  | Clamp of bool
+  | Precision of float
+  | [<CompiledName("velocity")>] InitialVelocity of float
+  | Duration of float
+  | Easing of (float -> float)
+
+
+[<RequireQualifiedAccess>]
+module SpringConfigs =
+    let Default =
+        [
+            SpringConfig.Mass 1.
+            SpringConfig.Tension 170.
+            SpringConfig.Friction 26.
+        ]
+
+    let Gentle =
+        [
+            SpringConfig.Mass 1.
+            SpringConfig.Tension 120.
+            SpringConfig.Friction 14.
+        ]
+
+    let Wobbly =
+        [
+            SpringConfig.Mass 1.
+            SpringConfig.Tension 180.
+            SpringConfig.Friction 12.
+        ]
+
+    let Stiff =
+        [
+            SpringConfig.Mass 1.
+            SpringConfig.Tension 210.
+            SpringConfig.Friction 20.
+        ]
+
+    let Slow =
+        [
+            SpringConfig.Mass 1.
+            SpringConfig.Tension 280.
+            SpringConfig.Friction 60.
+        ]
+
+    let Molasses =
+        [
+            SpringConfig.Mass 1.
+            SpringConfig.Tension 280.
+            SpringConfig.Friction 120.
+        ]
+
+
+[<RequireQualifiedAccess>]
+type SpringProp<'Item, 'Option> =
     | Ref of obj
     | Initial of 'Option
     | [<CompiledName("initial")>] InitialByFn of ('Item -> 'Option)
@@ -26,8 +83,8 @@ type Property<'Item, 'Option> =
     | [<CompiledName("to")>] ToByArray of 'Option list
     | Delay of float
     | DelayByFn of (Key -> float)
-    | Config of ConfigProp list
-    | ConfigByFn of (Key -> ConfigProp list)
+    | Config of SpringConfig list
+    | ConfigByFn of (Key -> SpringConfig list)
     | Reverse of bool
     | OnStart of (Key -> unit)
     | OnRest of (unit -> unit)
@@ -42,8 +99,8 @@ type Property<'Item, 'Option> =
     static member toObj props =
         props
         |> Seq.map (function 
-            | Property.Config x -> Property.Custom ("config", keyValueList CaseRules.LowerFirst x)
-            | Property.ConfigByFn f -> Property.Custom ("config", box(f >> keyValueList CaseRules.LowerFirst))
+            | SpringProp.Config x -> SpringProp.Custom ("config", keyValueList CaseRules.LowerFirst x)
+            | SpringProp.ConfigByFn f -> SpringProp.Custom ("config", box(f >> keyValueList CaseRules.LowerFirst))
             | x -> x
         )
         |> keyValueList CaseRules.LowerFirst
@@ -51,10 +108,10 @@ type Property<'Item, 'Option> =
     static member getDefaultOption props =
         props
         |> Seq.tryPick (function
-            | Property.Initial x
-            | Property.From x
-            | Property.To x
-            | Property.Enter x -> Some x
+            | SpringProp.Initial x
+            | SpringProp.From x
+            | SpringProp.To x
+            | SpringProp.Enter x -> Some x
             | _ -> None)
 
 

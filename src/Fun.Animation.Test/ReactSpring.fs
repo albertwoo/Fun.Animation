@@ -19,18 +19,18 @@ let ``SSR: Interpolation.map`` () =
 
 [<Fact>]
 let ``SSR: useSpring`` () =
-    Assert.Equal({| x = 1 |}, SpringHooks.useSpring [ Property.To {| x = 1 |} ])
-    Assert.Equal({| x = 1 |}, SpringHooks.useSpring(fun () -> [ Property.To {| x = 1 |} ]).current)
+    Assert.Equal({| x = 1 |}, SpringHooks.useSpring [ SpringProp.To {| x = 1 |} ])
+    Assert.Equal({| x = 1 |}, SpringHooks.useSpring(fun () -> [ SpringProp.To {| x = 1 |} ]).current)
 
 [<Fact>]
 let ``SSR: useSprings`` () =
-    Assert.Equal([{| x = 1 |}], SpringHooks.useSprings(1, [ [ Property.To {| x = 1 |} ] ]).current)
-    Assert.Equal([{| x = 0 |}; {| x = 1 |}], SpringHooks.useSprings(2, fun i -> [ Property.To {| x = i |} ]).current)
+    Assert.Equal([{| x = 1 |}], SpringHooks.useSprings(1, [ [ SpringProp.To {| x = 1 |} ] ]).current)
+    Assert.Equal([{| x = 0 |}; {| x = 1 |}], SpringHooks.useSprings(2, fun i -> [ SpringProp.To {| x = i |} ]).current)
 
 [<Fact>]
 let ``SSR: useTrail`` () =
-    Assert.Equal({| x = 1 |}, SpringHooks.useTrail(1, [ Property.To {| x = 1 |} ]))
-    Assert.Equal([{| x = 1 |}; {| x = 1 |}], SpringHooks.useTrail(2, fun () -> [ Property.To {| x = 1 |} ]).current)
+    Assert.Equal({| x = 1 |}, SpringHooks.useTrail(1, [ SpringProp.To {| x = 1 |} ]))
+    Assert.Equal([{| x = 1 |}; {| x = 1 |}], SpringHooks.useTrail(2, fun () -> [ SpringProp.To {| x = 1 |} ]).current)
 
 [<Fact>]
 let ``SSR: useChain`` () =
@@ -38,6 +38,10 @@ let ``SSR: useChain`` () =
 
 [<Fact>]
 let ``SSR: useTransition`` () =
-    let actual = SpringHooks.useTransition([| 1 |], id, [ Property.To {| x = 1 |} ]) |> Array.map (fun x -> x.key)
+    let actual = SpringHooks.useTransition([| 1 |], id, [ SpringProp.To {| x = 1 |} ]) |> Array.map (fun x -> x.key)
     Assert.Equal([ 1 ], actual)
 
+
+[<Fact>]
+let ``SSR: Animated.div`` () =
+    Animated.div [] []

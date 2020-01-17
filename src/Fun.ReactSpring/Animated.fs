@@ -2,17 +2,17 @@
 module Fun.ReactSpring.Animated
 
 open Fable.React
+open Fable.React.Isomorphic
 open Utils
 open Bindings
 
 
 let inline animatedEle ty props childs =
   let ty =
-    #if FABLE_COMPILER
-    getJsValueByKey animatedEles ty
-    #else
-    ty
-    #endif
+    isomorphicExec
+        (fun () -> getJsValueByKey animatedEles ty)
+        (fun () -> ty)
+        ()
   domEl ty props childs
 
 

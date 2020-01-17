@@ -12,17 +12,17 @@ let main =
             SpringHooks.useTrail(
                 3,
                 fun () -> [
-                    Property.To {| xy = [| 0.; 0. |] |}
-                    Property.ConfigByFn (fun k ->
+                    SpringProp.To {| xy = [| 0.; 0. |] |}
+                    SpringProp.ConfigByFn (fun k ->
                         Browser.Dom.console.error k
                         [
                             if k = 0 then
-                                ConfigProp.Tension 5000.
-                                ConfigProp.Friction 40.
+                                SpringConfig.Tension 5000.
+                                SpringConfig.Friction 40.
                             else
-                                ConfigProp.Mass 100.
-                                ConfigProp.Tension 200.
-                                ConfigProp.Friction 200.
+                                SpringConfig.Mass 100.
+                                SpringConfig.Tension 200.
+                                SpringConfig.Friction 200.
                         ])
                  ]
             )

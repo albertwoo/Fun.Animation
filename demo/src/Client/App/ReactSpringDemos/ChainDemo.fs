@@ -13,10 +13,10 @@ let main =
             let springRef = Hooks.useRef null
             let spring =
                 SpringHooks.useSpring [
-                    Property.Ref springRef
-                    Property.Config Configs.Stiff
-                    Property.From {| size = "20%"; background = "hotpink" |}
-                    Property.To 
+                    SpringProp.Ref springRef
+                    SpringProp.Config SpringConfigs.Stiff
+                    SpringProp.From {| size = "20%"; background = "hotpink" |}
+                    SpringProp.To 
                         {|
                             size = if isOpen.current then "100%" else "20%"
                             background = if isOpen.current then "white"  else "hotpink"
@@ -29,12 +29,12 @@ let main =
                     (if isOpen.current then [|1..12|] else [||]),
                     id,
                     [
-                        Property.Ref transRef
-                        Property.Unique true
-                        Property.Trail (400 / 12)
-                        Property.From  {| opacity = 0; transform = "scale(0)" |}
-                        Property.Enter {| opacity = 1; transform = "scale(1)" |}
-                        Property.Leave {| opacity = 0; transform = "scale(0)" |}
+                        SpringProp.Ref transRef
+                        SpringProp.Unique true
+                        SpringProp.Trail (400 / 12)
+                        SpringProp.From  {| opacity = 0; transform = "scale(0)" |}
+                        SpringProp.Enter {| opacity = 1; transform = "scale(1)" |}
+                        SpringProp.Leave {| opacity = 0; transform = "scale(0)" |}
                     ]
                 )
 

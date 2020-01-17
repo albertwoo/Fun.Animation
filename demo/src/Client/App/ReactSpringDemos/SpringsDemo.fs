@@ -26,8 +26,8 @@ let main =
                 SpringHooks.useSprings(
                     pages.Length,
                     (fun i -> [
-                        Property.To (calc i -1)
-                        Property.Config Configs.Slow
+                        SpringProp.To (calc i -1)
+                        SpringProp.Config SpringConfigs.Slow
                     ])
                )
 

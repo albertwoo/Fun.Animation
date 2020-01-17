@@ -14,9 +14,9 @@ let main =
                 [| source.current |],
                 id,
                 [
-                    Property.From  {| opacity = 0; transform = "translate3d(100%,0,0)" |}
-                    Property.Enter {| opacity = 1; transform = "translate3d(0%,0,0)" |}
-                    Property.Leave {| opacity = 0; transform = "translate3d(-50%,0,0)" |}
+                    SpringProp.From  {| opacity = 0; transform = "translate3d(100%,0,0)" |}
+                    SpringProp.Enter {| opacity = 1; transform = "translate3d(0%,0,0)" |}
+                    SpringProp.Leave {| opacity = 0; transform = "translate3d(-50%,0,0)" |}
                 ]
             )
 

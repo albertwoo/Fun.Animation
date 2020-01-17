@@ -46,7 +46,7 @@ let main =
                 SpringHooks.useSprings(
                     items.current.Length,
                     fun i -> [
-                        Property.To (calc (order.current, false, 0, 0, 0.) i)
+                        SpringProp.To (calc (order.current, false, 0, 0, 0.) i)
                     ]
                 )
 

@@ -10,8 +10,8 @@ let main =
         fun () ->
             let spring =
                 SpringHooks.useSpring(fun () -> [
-                    Property.To {| xys = [| 0.; 0.; 1. |] |}
-                    Property.Config Configs.Slow
+                    SpringProp.To {| xys = [| 0.; 0.; 1. |] |}
+                    SpringProp.Config SpringConfigs.Slow
                 ])
 
             let calc x y =
