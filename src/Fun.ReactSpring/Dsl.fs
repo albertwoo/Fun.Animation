@@ -149,13 +149,13 @@ type SpringHooks() =
 module Helper =
     let toHTMLProps obj =
         isomorphicExec
-            (fun () -> Utils.jsObjKeyValues obj |> Seq.map (HTMLAttr.Custom >> unbox<IHTMLProp>))
-            (fun () -> [| |] |> unbox)
+            (fun () -> Utils.jsObjKeyValues obj |> Seq.map (HTMLAttr.Custom >> unbox<IHTMLProp>) |> Seq.toList)
+            (fun () -> [])
             ()
 
     let toStyleProps obj =
         isomorphicExec
-            (fun () -> Utils.jsObjKeyValues obj |> Seq.map (CSSProp.Custom >> unbox<CSSProp>))
-            (fun () -> [| |] |> unbox)
+            (fun () -> Utils.jsObjKeyValues obj |> Seq.map (CSSProp.Custom >> unbox<CSSProp>) |> Seq.toList)
+            (fun () -> [])
             ()
     

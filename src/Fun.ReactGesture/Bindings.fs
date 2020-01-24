@@ -35,7 +35,7 @@ type IGestureState =
     // offset distance
     abstract distance: float
     // direction per axis
-    abstract direction: float
+    abstract direction: IGesturePoint
     // gesture start time
     abstract startTime: obj
     // gesture elapsed time
