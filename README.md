@@ -37,8 +37,11 @@
 
 ## This is still under dev
 
-## Road map:
-  
-   1. Refactor api
-   2. Bug fix
-   3. Server side rendering partial support  
+## To support IE11 you should import something at the begining of your client program
+
+    You can check the demo app
+
+    ```fsharp
+    importAll "@babel/polyfill"
+    importAll "core-js"
+    ```

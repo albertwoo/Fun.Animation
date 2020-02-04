@@ -48,7 +48,7 @@ let main =
                                     Style [
                                         Height 200
                                         Width data.width
-                                        BackgroundImage (sprintf "url(%s)" pages.[index])
+                                        BackgroundImage (sprintf "url('%s')" pages.[index])
                                     ]
                                     yield! toHTMLProps(gestureAttrs.bind index)
                                 ]

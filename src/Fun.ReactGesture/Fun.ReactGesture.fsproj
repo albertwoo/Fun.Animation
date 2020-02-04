@@ -3,9 +3,9 @@
     <PropertyGroup>
         <TargetFramework>netstandard2.0</TargetFramework>
         <NpmDependencies>
-            <NpmPackage Name="react-use-gesture" Version="7.0.0-beta.10" />
+            <NpmPackage Name="react-use-gesture" Version="7.0.0" />
         </NpmDependencies>
-        <Version>1.0.0-beta3</Version>
+        <Version>1.0.0-beta4</Version>
         <Authors>slaveoftime</Authors>
         <Company>https://www.slaveoftime.fun</Company>
         <Description>React-UseGesture bindging for fable</Description>

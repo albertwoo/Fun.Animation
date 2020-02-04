@@ -28,7 +28,6 @@ let demoCard props =
                 Classes [
                     Tw.``overflow-hidden``
                     Tw.``w-03/04``
-                    Tw.``mx-auto``
                     Tw.``p-10``
                     Tw.``m-10``
                     Tw.flex
