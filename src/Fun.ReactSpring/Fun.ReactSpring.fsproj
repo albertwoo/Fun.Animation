@@ -20,6 +20,8 @@
         <Compile Include="Bindings.fs" />
         <Compile Include="Dsl.fs" />
         <Compile Include="Animated.fs" />
+        <Compile Include="RenderProps.fs" />
+        <Content Include="*.fsproj; **\*.fs" PackagePath="fable\" />
     </ItemGroup>
 
     <ItemGroup>
@@ -27,8 +29,6 @@
         <PackageReference Include="Fable.React" Version="5.3.5" />
     </ItemGroup>
 
-    <ItemGroup>
-        <Content Include="*.fsproj; **\*.fs" PackagePath="fable\" />
-    </ItemGroup>
+    <ItemGroup />
 
 </Project>

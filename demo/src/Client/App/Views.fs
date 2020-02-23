@@ -85,5 +85,12 @@ let app state dispatch =
                 DemoCardProp.Description "You can click to trigger the animation"
                 DemoCardProp.ContainerCss [ Tw.``bg-green-100`` ]
             ]
+
+            div </> [
+                Text "RenderProps Demo"
+                Classes [ Tw.``text-center``; Tw.``text-3xl``; Tw.``mt-10``; Tw.``mb-04`` ]
+            ]
+
+            RenderPropsDemo_Spring.render()
         ]
     ]

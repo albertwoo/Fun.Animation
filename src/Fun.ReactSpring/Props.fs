@@ -82,9 +82,9 @@ type SpringProp<'Item, 'Option> =
     | [<CompiledName("to")>] ToByFn of (SpringKey -> 'Option)
     | [<CompiledName("to")>] ToByArray of 'Option list
     | Delay of float
-    | DelayByFn of (SpringKey -> float)
+    | [<CompiledName("delay")>] DelayByFn of (SpringKey -> float)
     | Config of SpringConfig list
-    | ConfigByFn of (SpringKey -> SpringConfig list)
+    | [<CompiledName("config")>] ConfigByFn of (SpringKey -> SpringConfig list)
     | Reverse of bool
     | OnStart of (SpringKey -> unit)
     | OnRest of (unit -> unit)

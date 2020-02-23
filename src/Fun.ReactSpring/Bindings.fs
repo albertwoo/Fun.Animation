@@ -2,6 +2,7 @@ module Fun.ReactSpring.Bindings
 
 open Fable.Core
 open Fable.Core.JsInterop
+open Fable.React
 
 
 type ISpring<'T> =
@@ -49,6 +50,9 @@ let useTrailLazy (num: int) (fn: unit -> 'Option): ITrail<_> = import "useTrail"
 let useChain (refs: obj[]) (timeSteps: float []) (timeFrame: int): unit = import "useChain" "react-spring"
 
 let useTransition (items: 'Item[]) (map: 'Item -> 'Key) option: ITransition<'Item, 'Option> [] = import "useTransition" "react-spring"
+
+
+let Spring: ReactElement = import "Spring" "react-spring/renderprops"
 
 
 let animatedEle: obj = import "animated" "react-spring"
