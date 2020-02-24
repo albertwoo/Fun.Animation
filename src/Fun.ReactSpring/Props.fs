@@ -89,7 +89,7 @@ type SpringProp<'Item, 'Option> =
     | OnStart of (SpringKey -> unit)
     | OnRest of (unit -> unit)
     | OnFrame of (unit -> unit)
-    | Custom of (string * obj)
+    | [<Erase>] Custom of (string * obj)
     | Unique of bool
     | [<CompiledName("unique")>] UniqueByFn of ('Item -> bool)
     | Reset of bool

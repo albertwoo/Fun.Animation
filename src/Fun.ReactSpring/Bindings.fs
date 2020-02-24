@@ -53,6 +53,7 @@ let useTransition (items: 'Item[]) (map: 'Item -> 'Key) option: ITransition<'Ite
 
 
 let Spring: ReactElement = import "Spring" "react-spring/renderprops"
+let Trail: ReactElement = import "Trail" "react-spring/renderprops"
 
 
 let animatedEle: obj = import "animated" "react-spring"

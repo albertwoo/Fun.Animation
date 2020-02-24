@@ -86,11 +86,23 @@ let app state dispatch =
                 DemoCardProp.ContainerCss [ Tw.``bg-green-100`` ]
             ]
 
-            div </> [
+            h2 </> [
                 Text "RenderProps Demo"
-                Classes [ Tw.``text-center``; Tw.``text-3xl``; Tw.``mt-10``; Tw.``mb-04`` ]
+                Classes [ Tw.``text-center``; Tw.``text-3xl``; Tw.``mt-10``; Tw.``mb-10``; Tw.``font-bold``; Tw.``text-green-600`` ]
             ]
 
-            RenderPropsDemo_Spring.render()
+            demoCard [
+                DemoCardProp.View (RenderPropsDemo_Spring.render())
+                DemoCardProp.Title "Spring"
+                DemoCardProp.Description "Click star to trigger animation"
+                DemoCardProp.ContainerCss [ Tw.``bg-green-100`` ]
+            ]
+
+            demoCard [
+                DemoCardProp.View (RenderPropsDemo_Trail.render())
+                DemoCardProp.Title "Trail"
+                DemoCardProp.Description "Click rectangle to trigger animation"
+                DemoCardProp.ContainerCss [ Tw.``bg-blue-100`` ]
+            ]
         ]
     ]
