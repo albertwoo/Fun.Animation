@@ -25,11 +25,11 @@ module Interpolation =
                     (FSharp.Reflection.FSharpValue.GetTupleFields props)
                     (
                         Utils.mapJsArgs(fun x ->
-                        FSharp.Reflection.FSharpValue.MakeTuple(x, typeof<'From>)
-                        |> unbox<'From>
-                        |> mapper
+                            FSharp.Reflection.FSharpValue.MakeTuple(x, typeof<'From>)
+                            |> unbox<'From>
+                            |> mapper
+                        )
                     )
-                )
             )
             (fun () -> props |> mapper)
             ()

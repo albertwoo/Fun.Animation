@@ -5,6 +5,8 @@ open Fable.React
 open Fable.React.Props
 open Fun.ReactSpring
 
+type tranProp<'Item, 'Prop> = TransitionRenderProp<'Item, 'Prop> 
+
 
 let render =
     FunctionComponent.Of(
@@ -23,23 +25,22 @@ let render =
             div </> [
                 Children [
                     transition [
-                        TransitionRenderProp.Items [|1..count.current%5|]
-                        TransitionRenderProp.From {| transform = "translate3d(0,-20px,0)"; opacity = 0. |}
-                        TransitionRenderProp.Enter {| transform = "translate3d(0,0px,0)"; opacity = 1. |}
-                        TransitionRenderProp.Leave {| transform = "translate3d(0,20px,0)"; opacity = 0. |}
-                        TransitionRenderProp.Children (Func<_, _, _>(fun item k ->
-                            Func<_, _>(fun prop -> [
-                                span </> [
-                                    Key (string k)
-                                    Style [
-                                        Transform prop.transform
-                                        Opacity prop.opacity
-                                    ]
-                                    Classes [ Tw.``text-2xl``; Tw.``font-bold``; Tw.``inline-block`` ]
-                                    Text (string item)
+                        tranProp.Items [|1..count.current%5|]
+                        tranProp.From  {| transform = "translate3d(0,-20px,0)"; opacity = 0. |}
+                        tranProp.Enter {| transform = "translate3d(0,0px,0)"; opacity = 1. |}
+                        tranProp.Leave {| transform = "translate3d(0,20px,0)"; opacity = 0. |}
+                        tranProp.ChildrenByFn (fun item k prop -> [
+                            span </> [
+                                Key (string k)
+                                Style [
+                                    WillChange "transform,opacity"
+                                    Transform prop.transform
+                                    Opacity prop.opacity
                                 ]
-                            ])
-                        ))
+                                Classes [ Tw.``text-2xl``; Tw.``font-bold``; Tw.``inline-block`` ]
+                                Text (string item)
+                            ]
+                        ])
                     ]
                 ]
             ]

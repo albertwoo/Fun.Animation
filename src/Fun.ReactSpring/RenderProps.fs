@@ -1,7 +1,6 @@
 [<AutoOpen>]
 module Fun.ReactSpring.RenderProps
 
-open System
 open Fable.Core
 open Fable.Core.JsInterop
 open Fable.React
@@ -53,22 +52,27 @@ type TrailRenderProp<'Item, 'Option> =
     | Keys of obj[]
     | [<CompiledName("keys")>] KeyByFn of ('Item -> int)
     | Items of 'Item[]
-    | [<CompiledName("children")>] ChildrenByFn of (Func<'Item, int, Func<'Option, ReactElement list>>)
+    | ChildrenByFn of ('Item -> SpringKey -> 'Option -> ReactElement list)
     | Reverse of bool
-    | [<Erase>] Custom of (string * obj)
+    | [<Erase>] Custom of string * obj
 
     static member toObj props =
-        props |> keyValueList CaseRules.LowerFirst
+        props
+        |> Seq.map (function
+            | TrailRenderProp.ChildrenByFn f -> TrailRenderProp.Custom("children", Utils.mapJsArgs (fun (args: obj[]) -> fun prop -> f (args.[0] |> unbox<'Item>) (args.[1] |> unbox) prop))
+            | x -> x
+        )
+        |> keyValueList CaseRules.LowerFirst
 
 
 [<RequireQualifiedAccess>]
 type TransitionRenderProp<'Item, 'Option> =
     | Items of 'Item[]
-    | Children of (Func<'Item, int, Func<'Option, ReactElement list>>)
+    | ChildrenByFn of ('Item -> SpringKey -> 'Option -> ReactElement list)
     | Keys of obj[]
     | OnDestroyed of (unit -> unit)
     | Config of SpringConfig list
-    //| [<CompiledName("config")>] ConfigByFn of (Func<'Item, int, Func<'Option, SpringConfig list>>)
+    | [<CompiledName("config")>] ConfigByFn of ('Item -> SpringKey -> 'Option -> SpringConfig list)
     | Reset of bool
     | Unique of bool
     // Trailing delay in ms
@@ -83,17 +87,19 @@ type TransitionRenderProp<'Item, 'Option> =
     | [<CompiledName("from")>] FromByFn of ('Item -> 'Option)
     | Initial of 'Option
     | [<CompiledName("initial")>] InitialByFn of ('Item -> 'Option)
-    | [<Erase>] Custom of (string * obj)
+    | [<Erase>] Custom of string * obj
     
     static member toObj props =
         props
         |> Seq.map (function 
             | TransitionRenderProp.Config x -> TransitionRenderProp.Custom ("config", keyValueList CaseRules.LowerFirst x)
-            //| TransitionRenderProp.ConfigByFn f -> TransitionRenderProp.Custom ("config", box(f >> keyValueList CaseRules.LowerFirst))
+            | TransitionRenderProp.ConfigByFn f -> TransitionRenderProp.Custom ("config", Utils.mapJsArgs (fun (args: obj[]) -> fun prop -> f (args.[0] |> unbox<'Item>) (args.[1] |> unbox) prop |> keyValueList CaseRules.LowerFirst))
+            | TransitionRenderProp.ChildrenByFn f -> TransitionRenderProp.Custom("children", Utils.mapJsArgs (fun (args: obj[]) -> fun prop -> f (args.[0] |> unbox<'Item>) (args.[1] |> unbox) prop))
             | x -> x
         )
         |> keyValueList CaseRules.LowerFirst
         
+
 
 let inline spring<'Option> (props: SpringRenderProp<'Option> list) =
     isomorphicExec
@@ -132,7 +138,7 @@ let inline trail<'Item, 'Option> (props: TrailRenderProp<'Item, 'Option> list) =
                             | TrailRenderProp.To x -> Some x
                             | _ -> None
                         )
-                        |> Option.map (fun prop -> f.Invoke(item, 0).Invoke(prop))
+                        |> Option.map (fun prop -> f item 0 prop)
                         |> Option.defaultValue []
                     )
                 )
@@ -152,7 +158,7 @@ let inline transition<'Item, 'Option> (props: TransitionRenderProp<'Item, 'Optio
             |> Option.bind Seq.tryHead
             |> Option.bind (fun item ->
                 props
-                |> List.choose (function TransitionRenderProp.Children x -> Some x | _ -> None)
+                |> List.choose (function TransitionRenderProp.ChildrenByFn x -> Some x | _ -> None)
                 |> List.tryLast
                 |> Option.map (fun f ->
                     fragment [] (
@@ -164,7 +170,7 @@ let inline transition<'Item, 'Option> (props: TransitionRenderProp<'Item, 'Optio
                             | TransitionRenderProp.EnterByFn f -> Some(f item)
                             | _ -> None
                         )
-                        |> Option.map (fun prop -> f.Invoke(item, 0).Invoke(prop))
+                        |> Option.map (fun prop -> f item 0 prop)
                         |> Option.defaultValue []
                     )
                 )

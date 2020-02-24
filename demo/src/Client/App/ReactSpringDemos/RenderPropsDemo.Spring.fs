@@ -4,6 +4,8 @@ open Fable.React
 open Fable.React.Props
 open Fun.ReactSpring
 
+type springProp<'Option> = SpringRenderProp<'Option>
+
 
 let render =
     FunctionComponent.Of(
@@ -15,9 +17,9 @@ let render =
                 Style [ Height "250px" ]
                 Children [
                     spring [
-                        SpringRenderProp.From {| opacity  = 0. |}
-                        SpringRenderProp.To {| opacity  = if toggle.current then 1. else 0.5 |}
-                        SpringRenderProp.ChildrenByFn (fun op -> [
+                        springProp.From {| opacity  = 0. |}
+                        springProp.To {| opacity  = if toggle.current then 1. else 0.5 |}
+                        springProp.ChildrenByFn (fun op -> [
                             div </> [
                                 Key "1"
                                 Style [ Opacity op.opacity ]
@@ -43,9 +45,9 @@ let render =
                            SVGAttr.StrokeWidth "0.5"
                         ] [
                             spring [
-                                SpringRenderProp.From {| dash = 0. |}
-                                SpringRenderProp.To {| dash = if toggle.current then 0. else 30. |}
-                                SpringRenderProp.ChildrenByFn (fun op -> [
+                                springProp.From {| dash = 0. |}
+                                springProp.To {| dash = if toggle.current then 0. else 30. |}
+                                springProp.ChildrenByFn (fun op -> [
                                     path [
                                         Key "START-PATH"
                                         SVGAttr.StrokeDasharray "1"
