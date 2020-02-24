@@ -104,5 +104,11 @@ let app state dispatch =
                 DemoCardProp.Description "Click rectangle to trigger animation"
                 DemoCardProp.ContainerCss [ Tw.``bg-blue-100`` ]
             ]
+
+            demoCard [
+                DemoCardProp.View (RenderPropsDemo_Transition.render())
+                DemoCardProp.Title "Transition"
+                DemoCardProp.ContainerCss [ Tw.``bg-green-100`` ]
+            ]
         ]
     ]

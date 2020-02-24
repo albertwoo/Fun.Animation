@@ -25,7 +25,7 @@ let render =
                                                 opacity = if toggle.current then 1. else 0.25
                                                 x = if toggle.current then 0 else 100
                                            |}
-                        TrailRenderProp.ChildrenByFn (Func<_, _, Func<_,_>>(fun item k ->
+                        TrailRenderProp.ChildrenByFn (Func<_, _, _>(fun item k ->
                             Func<_, _>(fun prop ->
                                 [
                                     div </> [

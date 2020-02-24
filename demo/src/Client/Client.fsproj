@@ -17,6 +17,7 @@
     <Compile Include="App\ReactSpringDemos\DraggableListDemo.fs" />
     <Compile Include="App\ReactSpringDemos\RenderPropsDemo.Spring.fs" />
     <Compile Include="App\ReactSpringDemos\RenderPropsDemo_Trail.fs" />
+    <Compile Include="App\ReactSpringDemos\RenderPropsDemo_Transition.fs" />
     <Compile Include="App\Views.fs" />
     <Compile Include="Startup.fs" />
   </ItemGroup>
