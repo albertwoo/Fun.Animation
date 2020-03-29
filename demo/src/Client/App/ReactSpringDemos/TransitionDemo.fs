@@ -1,5 +1,6 @@
 module Client.App.ReactSpringDemos.TransitionDemo
 
+open Fable.Core.JsInterop
 open Fable.React
 open Fable.React.Props
 open Fun.ReactSpring
@@ -24,12 +25,14 @@ let main =
 
         let dragAttrs =
             GestureHooks.useWheel (fun state ->
-                if state.delta.y > 100. then source.update((source.current + 1) % 3)
-                elif state.delta.y < -100. then source.update((source.current - 1) % 3)
+                if state.delta.y > 10. then source.update((source.current + 1) % 3)
+                elif state.delta.y < -10. then source.update((source.current - 1) % 3)
             )
 
         div </> [
             OnClick (fun _ -> source.update((source.current + 1) % 3))
+            OnMouseEnter (fun _ -> Browser.Dom.document?body?style?overflow <- "hidden")
+            OnMouseLeave (fun _ -> Browser.Dom.document?body?style?overflow <- "auto")
             Classes [ Tw.``overflow-hidden``; Tw.relative ]
             Style [ Height 200; Width 300 ]
             yield! toHTMLProps(dragAttrs.bind 0)
