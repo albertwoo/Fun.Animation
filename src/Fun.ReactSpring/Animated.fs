@@ -8,12 +8,12 @@ open Bindings
 
 
 let inline animatedEle ty props childs =
-  let ty =
-    isomorphicExec
-        (fun () -> getJsValueByKey animatedEle ty)
-        (fun () -> ty)
-        ()
-  domEl ty props childs
+    let ty =
+        isomorphicExec
+            (fun () -> getJsValueByKey animatedEle ty)
+            (fun () -> ty)
+            ()
+    domEl ty props childs
 
 
 let inline a props childs = animatedEle "a" props childs

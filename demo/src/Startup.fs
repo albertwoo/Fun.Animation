@@ -2,20 +2,14 @@ module Client.Startup
 
 open Elmish
 open Elmish.React
-open Fable.Core.JsInterop
-
-#if DEBUG
 open Elmish.HMR
-#endif
+open Fable.Core.JsInterop
 
 importAll "@babel/polyfill"
 importAll "core-js"
 
+importAssetes()
+
 Program.mkProgram App.States.init App.States.update App.Views.app
-#if DEBUG
-|> Program.withConsoleTrace
-#endif
-|> Program.withReactBatched "root"
-#if DEBUG
-#endif
+|> Program.withReactSynchronous "root"
 |> Program.run

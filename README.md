@@ -5,6 +5,7 @@
 1. React-Spring binding for fable
 2. React-UseGesture binding for fable
 
+## Cannot use typedArray for fable compiler, we should toggel it off
 
 ## How to use
 

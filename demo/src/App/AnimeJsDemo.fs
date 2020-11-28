@@ -1,9 +1,9 @@
 module Client.App.AnimeJsDemo
 
-open Fable.Core
 open Fable.Core.JsInterop
 open Fable.React
 open Fable.React.Props
+open Feliz
 open Fun.AnimeJs
 
 
@@ -43,62 +43,61 @@ let config =
   |}
 
 
-let animeDiv =
-  FunctionComponent.Of(
-    fun () ->
-      let room() =
+
+[<ReactComponent>]
+let animeDiv () =
+    let room() =
         Anime.anime2
-          {|
-            targets = "#anime-1"
-            translateX = fun el ->
-              el?getAttribute("data-x")
-            translateY = fun (el, i) ->
-              50 + (-50 * i)
-            scale = fun (el, i, l) ->
-              (l - i) + 0.25
-            rotate = fun _ -> Anime.animejs?random(-360, 360)
-            borderRadius = fun _ -> [| "50%"; Anime.animejs?random(10, 35) + "%" |]
-            duration = fun _ -> Anime.animejs?random(1200, 1800)
-            delay = fun _ -> Anime.animejs?random(0, 400)
-            direction = "alternate"
-            loop = true
-          |}
-      let normal() =
+            {|
+                targets = "#anime-1"
+                translateX = fun el ->
+                    el?getAttribute("data-x")
+                translateY = fun (el, i) ->
+                    50 + (-50 * i)
+                scale = fun (el, i, l) ->
+                    (l - i) + 0.25
+                rotate = fun _ -> Anime.animejs?random(-360, 360)
+                borderRadius = fun _ -> [| "50%"; Anime.animejs?random(10, 35) + "%" |]
+                duration = fun _ -> Anime.animejs?random(1200, 1800)
+                delay = fun _ -> Anime.animejs?random(0, 400)
+                direction = "alternate"
+                loop = true
+            |}
+    let normal() =
         Anime.anime2
-          {|
-            targets = "#anime-1"
-            duration = 500
-            width = 50
-            height = 50
-          |}
-      Hooks.useEffect(
+            {|
+                targets = "#anime-1"
+                duration = 500
+                width = 50
+                height = 50
+            |}
+    Hooks.useEffect(
         (fun () ->
-          //Anime.anime2 config
-          //room()
-          Anime.anime [
+            //Anime.anime2 config
+            //room()
+            Anime.anime [
             AnimeProp.targets ("#anime-1")
             AnimeProp.cssProp (Height 100)
             AnimeProp.loop 3
             AnimeProp.delay 1000
             AnimeProp.direction "alternate"
-          ]
+            ]
         )
         ,[||]
-      )
-      div </> [
+    )
+    div </> [
         Id "anime-1"
         Style [
-          Width "50px"
-          Height "50px"
-          BackgroundColor "purple"
-          Cursor "pointer"
+            Width "50px"
+            Height "50px"
+            BackgroundColor "purple"
+            Cursor "pointer"
         ]
         Children [
-          svg [
-            SVGAttr.Points ""
-          ] []
+            svg [
+                SVGAttr.Points ""
+            ] []
         ]
         //OnMouseEnter (fun _ -> room())
         //OnMouseLeave (fun _ -> normal())
-      ]
-  )
+    ]

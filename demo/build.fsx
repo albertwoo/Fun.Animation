@@ -1,45 +1,31 @@
-#r "paket: groupref build //"
-#load "./.fake/build.fsx/intellisense.fsx"
+#r "nuget: Fake.Core.Process,5.20.0"
+#r "nuget: Fake.IO.FileSystem,5.20.0"
+#r "nuget: BlackFox.Fake.BuildTask,0.1.3"
 
-#if !FAKE
-#r "netstandard"
-#r "Facades/netstandard" // https://github.com/ionide/ionide-vscode-fsharp/issues/839#issuecomment-396296095
-#endif
-
-open System
-
+open System.IO
 open Fake.Core
-open Fake.DotNet
-open Fake
 open Fake.IO
-open Fake.IO.FileSystemOperators
 open Fake.IO.Globbing.Operators
+open Fake.IO.FileSystemOperators
+open BlackFox.Fake
 
 
-Target.initEnvironment ()
+type Env = PROD | DEV
+
+let clientProjectDir = "./src"
 
 
-let serverPath          = __SOURCE_DIRECTORY__ </> "src/Server"
-let clientPath          = __SOURCE_DIRECTORY__ </> "src/Client"
-
-let deployDir           = __SOURCE_DIRECTORY__ </> "deploy"
-let publishDir          = deployDir </> "publish"
-let clientDeployPath    = clientPath </> "deploy"
-
+fsi.CommandLineArgs
+|> Array.skip 1
+|> BuildTask.setupContextFromArgv 
 
 let platformTool tool winTool =
     let tool = if Environment.isUnix then tool else winTool
     match ProcessUtils.tryFindFileOnPath tool with
     | Some t -> t
-    | _ ->
-        let errorMsg =
-            tool + " was not found in path. " +
-            "Please install it and make sure it's available from your path. " +
-            "See https://safe-stack.github.io/docs/quickstart/#install-pre-requisites for more info"
-        failwith errorMsg
+    | _ -> failwith (tool + " was not found in path. ")
 
-
-let runTool cmd args workingDir =
+let run cmd args workingDir =
     let arguments = args |> String.split ' ' |> Arguments.OfArgs
     Command.RawCommand (cmd, arguments)
     |> CreateProcess.fromCommand
@@ -49,103 +35,88 @@ let runTool cmd args workingDir =
     |> ignore
 
 
-let node = runTool (platformTool "node" "node.exe")
-let yarn = runTool (platformTool "yarn" "yarn.cmd")
-
-let dotnet cmd workingDir =
-    let result =
-        DotNet.exec (DotNet.Options.withWorkingDirectory workingDir) cmd ""
-    if result.ExitCode <> 0 then failwithf "'dotnet %s' failed in %s" cmd workingDir
+let yarn   = run (platformTool "yarn" "yarn.cmd")
+let dotnet = run (platformTool "dotnet" "dotnet.exe")  
 
 
-let openBrowser url =
-    //https://github.com/dotnet/corefx/issues/10361
-    Command.ShellCommand url
-    |> CreateProcess.fromCommand
-    |> CreateProcess.ensureExitCodeWithMessage "opening browser failed"
-    |> Proc.run
-    |> ignore
+let watchFile fn file =
+    let watcher = new FileSystemWatcher(Path.getDirectory file, Path.GetFileName file)
+    watcher.NotifyFilter <-  NotifyFilters.CreationTime ||| NotifyFilters.Size ||| NotifyFilters.LastWrite
+    watcher.Changed.Add (fun _ ->
+        printfn "File changed %s" file
+        fn())
+    watcher.EnableRaisingEvents <- true
+    watcher
 
 
-let clearDeployFolder targetDir =
-    !! (targetDir </> "*/FSharp.Core.resources.dll")
-    |> Seq.map Path.getDirectory
-    |> Shell.deleteDirs
+// It will generate all source code for the target project in the dir and put the js under fablejs
+let runFable dir env watch =
+    let mode = match watch with false -> "" | true -> " watch"
+    let define = match env with PROD -> "" | DEV -> " --define DEBUG"
+    dotnet (sprintf "fable%s . --outDir ./www/fablejs%s --typedArrays false" mode define) dir
 
-    !! (targetDir </> "*.pdb")
-    |> Seq.iter Shell.rm_rf    
+let cleanGeneratedJs dir = Shell.cleanDir (dir </> "www/fablejs")
+
+// It will generate css under the starget dir`s www/css folder
+let buildTailwindCss dir =
+    printfn "Build client css"
+    yarn "tailwindcss build css/tailwind-source.css -o css/tailwind-generated.css -c tailwind.config.js" (dir </> "www")
+
+let watchTailwindCss dir =
+    !!(dir </> "www/css/app-dev.css")
+    ++(dir </> "www/tailwind.config.js")
+    |> Seq.toList
+    |> List.map (watchFile (fun () -> buildTailwindCss dir))
+
+let serveDevJs dir =
+    Shell.cleanDir (dir </> "www/.dist")
+    yarn "parcel index.html --dist-dir .dist" (dir </> "www")
+
+let runBundle dir =
+    Shell.cleanDir (dir </> "www/.dist_prod")
+    yarn "parcel build index.html --dist-dir .dist_prod --public-url ./ --no-source-maps" (dir </> "www")
 
 
-Target.create "Clean" <| fun _ ->
-    [ publishDir
-      clientDeployPath ]
-    |> Shell.cleanDirs
-
-
-Target.create "InstallPackages" <| fun _ ->
-    printfn "Node version:"
-    node "--version" clientPath
-    printfn "Npm version:"
-    yarn "--version" clientPath
-    yarn "install" clientPath
-
-
-Target.create "Build" <| fun _ ->
-    yarn "webpack -p" clientPath
-
-
-Target.create "RunClient" <| fun _ ->
-    let client = async {
-        yarn "tailwind build public/css/tailwind-source.css -o public/css/tailwind-generated.css" clientPath
-        yarn "webpack-dev-server" clientPath
-    }
-    let browser = async {
-        do! Async.Sleep 10000
-        openBrowser "http://localhost:8080"
+let checkEnv =
+    BuildTask.create "Check environment" [] {
+        yarn "--version" ""
+        yarn "install" (clientProjectDir </> "www")
+        dotnet "tool restore" ""
     }
 
-    let vsCodeSession  = Environment.hasEnvironVar "vsCodeSession"
 
-    [
-        yield client
-        if not vsCodeSession then yield browser 
-    ]
-    |> Async.Parallel
-    |> Async.RunSynchronously
-    |> ignore
-
-
-Target.create "RunServer" <| fun _ ->
-    async {
-        dotnet "watch run" serverPath
+let preBuildClient =
+    BuildTask.create "PreBuildClient" [ checkEnv ] {
+        cleanGeneratedJs clientProjectDir
+        buildTailwindCss clientProjectDir
     }
-    |> Async.RunSynchronously
 
 
-Target.create "Bundle" <| fun _ ->
-    clearDeployFolder publishDir
-
-    let clientDir = publishDir </> "wwwroot"
-    Shell.copyDir clientDir clientDeployPath FileFilter.allFiles
-
-    !!(publishDir </> "**/*.*")
-    |> Zip.zip publishDir (deployDir </> DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss") + ".zip")
-
-
-open Fake.Core.TargetOperators
-
-"Clean"
-    ==> "InstallPackages"
-    ==> "Build"
-    ==> "Bundle"
-
-"Clean"
-    ==> "InstallPackages"
-    ==> "RunClient"
-
-"Clean"
-    ==> "InstallPackages"
-    ==> "RunServer"
+let runClientDev =
+    BuildTask.create "RunClientDev" [ preBuildClient ] {
+        runFable clientProjectDir DEV false
+        [
+            async {
+                runFable clientProjectDir DEV true
+            }
+            async {
+                let watchers = watchTailwindCss clientProjectDir
+                serveDevJs clientProjectDir
+                printfn "Clean up..."
+                watchers |> List.iter (fun x -> x.Dispose())
+            }
+        ]
+        |> Async.Parallel
+        |> Async.RunSynchronously
+        |> ignore
+    }
 
 
-Target.runOrDefaultWithArguments "Build"
+let bundleClientProd =
+    BuildTask.create "BundleClientProd" [ preBuildClient ] {
+        runFable clientProjectDir PROD false
+        runBundle clientProjectDir
+    }
+
+
+BuildTask.runOrDefault runClientDev

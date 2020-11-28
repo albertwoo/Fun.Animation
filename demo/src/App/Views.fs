@@ -16,19 +16,19 @@ let landingPage =
             h1 </> [
                 Classes [ Tw.``text-3xl``; Tw.``font-semibold``; Tw.``text-white`` ]
                 Children [
-                    span </> [ Text "react-spring for" ]
+                    span </> [ HTMLPropExtra.Text "react-spring for" ]
                     span </> [
-                        Text " fable"
+                        HTMLPropExtra.Text " fable"
                         Classes [ Tw.``text-purple-400``; Tw.``font-bold`` ]
                     ]
                 ]
             ]
             p </> [
-                Text "bring your components to life with simple spring animation primitives"
+                HTMLPropExtra.Text "bring your components to life with simple spring animation primitives"
                 Classes [ Tw.``text-gray-400``; Tw.``mb-04`` ]
             ]
             a </> [
-                Text ">> Check the react-spring official site"
+                HTMLPropExtra.Text ">> Check the react-spring official site"
                 Href "https://www.react-spring.io/"
                 Classes [ Tw.``text-purple-400``; Tw.``hover:text-purple-300`` ]
             ]
@@ -87,7 +87,7 @@ let app state dispatch =
             ]
 
             h2 </> [
-                Text "RenderProps Demo"
+                HTMLPropExtra.Text "RenderProps Demo"
                 Classes [ Tw.``text-center``; Tw.``text-3xl``; Tw.``mt-10``; Tw.``mb-10``; Tw.``font-bold``; Tw.``text-green-600`` ]
             ]
 

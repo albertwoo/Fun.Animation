@@ -1,0 +1,20 @@
+{
+    "dependencies": {
+        "react": "^16.13.0",
+        "react-dom": "^16.13.0",
+        "animejs": "3.1.0",
+        "react-spring": "8.0.4",
+        "react-use-gesture": "7.0.0"
+    },
+    "devDependencies": {
+        "@fullhuman/postcss-purgecss": "^3.0.0",
+        "autoprefixer": "^10.0.3",
+        "postcss-nested": "^5.0.1",
+        "parcel": "2.0.0-nightly.462",
+        "postcss": "^8.1.10",
+        "remotedev": "^0.2.9",
+        "core-js": "3.4.4",
+        "tailwindcss": "^2.0.1",
+        "@babel/polyfill": "7.12.1"
+    }
+}
