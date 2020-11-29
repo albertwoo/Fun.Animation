@@ -9,3 +9,4 @@ node_modules/
 fablejs
 .dist
 .dist_prod
+artifacts

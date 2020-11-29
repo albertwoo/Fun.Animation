@@ -1,0 +1,32 @@
+name: Build and publish nuget packages
+
+on:
+  release:
+    types:
+      - published
+
+jobs:
+  build:
+
+    runs-on: ubuntu-20.04
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.301
+    - name: Install dependencies
+      run: dotnet restore
+
+    - name: Build
+      run: |
+        dotnet pack src/Fun.ReactGesture/Fun.ReactGesture.fsproj --configuration Release --no-restore -o artifacts
+        dotnet pack src/Fun.ReactSpring/Fun.ReactSpring.fsproj --configuration Release --no-restore -o artifacts
+
+    - name: Test
+      run: dotnet test --no-restore --verbosity normal
+      
+      
+    - name: Push nuget packages
+      run: dotnet nuget push ./artifacts/*.nupkg --api-key ${{secrets.NUGET_API_KEY}} --skip-duplicate 
